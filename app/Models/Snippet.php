@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Support\OwnerToken;
 use Database\Factories\SnippetFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Http\Request;
 
-#[Fillable(['alias', 'title', 'content', 'content_type', 'language', 'is_public', 'password', 'expires_at'])]
+#[Fillable(['alias', 'title', 'content', 'content_type', 'language', 'is_public', 'password', 'expires_at', 'is_edited', 'edited_at', 'owner_token'])]
 #[Hidden(['password', 'owner_token'])]
 class Snippet extends Model
 {
@@ -42,8 +44,10 @@ class Snippet extends Model
     {
         return [
             'is_public' => 'boolean',
+            'is_edited' => 'boolean',
             'views_count' => 'integer',
             'expires_at' => 'datetime',
+            'edited_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -66,5 +70,24 @@ class Snippet extends Model
     public function verifyPassword(string $password): bool
     {
         return ! $this->isProtected() || \Hash::check($password, $this->password);
+    }
+
+    public function markAsEdited(): void
+    {
+        $this->update([
+            'is_edited' => true,
+            'edited_at' => now(),
+        ]);
+    }
+
+    public function canBeEditedBy(Request $request): bool
+    {
+        if ($request->user()) {
+            return $this->user_id === $request->user()->id;
+        }
+
+        $hash = OwnerToken::getHashFromRequest($request);
+
+        return $hash && $this->owner_token === $hash;
     }
 }

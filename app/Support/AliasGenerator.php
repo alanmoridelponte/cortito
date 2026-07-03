@@ -51,7 +51,7 @@ class AliasGenerator
      */
     public function isValid(string $alias): bool
     {
-        return (bool) preg_match('/^[a-z0-9]+(\.[a-z0-9]+){2}$/', $alias);
+        return (bool) preg_match('/^[a-z0-9][a-z0-9.\-]*$/', $alias);
     }
 
     private function composeAlias(): string

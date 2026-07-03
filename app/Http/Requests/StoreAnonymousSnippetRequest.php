@@ -20,9 +20,9 @@ class StoreAnonymousSnippetRequest extends FormRequest
             'alias' => [
                 'nullable',
                 'string',
-                'min:6',
+                'min:5',
                 'max:50',
-                'regex:/^[a-z0-9]+(\.[a-z0-9]+){2}$/',
+                'regex:/^[a-z0-9][a-z0-9.\-]*$/',
                 function ($attribute, $value, $fail) use ($aliasGenerator) {
                     if (! $aliasGenerator->isUnique($value)) {
                         $fail('Este alias ya está en uso. Por favor, elige otro.');
@@ -41,7 +41,7 @@ class StoreAnonymousSnippetRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'alias.regex' => 'El alias debe tener el formato: palabra.palabra.palabra (solo minúsculas, números y puntos).',
+            'alias.regex' => 'El alias solo puede contener minúsculas, números, puntos y guiones.',
             'content.required' => 'El contenido del snippet es obligatorio.',
             'content.max' => 'El contenido no puede exceder los 64KB.',
             'content_type.in' => 'Los snippets anónimos solo soportan código y texto.',

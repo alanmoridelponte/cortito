@@ -39,7 +39,7 @@ class OwnerToken
             value: $token,
             minutes: self::COOKIE_DURATION,
             path: '/',
-            secure: true,
+            secure: request()->secure(),
             httpOnly: true,
             sameSite: 'lax',
         ));

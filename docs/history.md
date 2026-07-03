@@ -2,11 +2,11 @@
 
 ## Descripción
 
-**Cortito** es una webapp tipo pastebin para compartir snippets de código y texto. El nombre es un juego de palabras: "corto" en español + el dominio `.to` (cortito.to).
+**Cortito** es una webapp tipo pastebin para compartir snippets de código y texto. El nombre es un juego de palabras: "corto" en español + el dominio `.ar` (cortito.ar).
 
 ## Stack Tecnológico
 
-- **Backend**: Laravel 13, PHP 8.3
+- **Backend**: Laravel 13, PHP 8.4
 - **Base de datos**: SQLite (archivo `database/database.sqlite`)
 - **Frontend**: Tailwind CSS 4, Vite 8
 - **Testing**: Pest 4
