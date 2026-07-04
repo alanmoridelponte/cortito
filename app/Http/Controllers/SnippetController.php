@@ -78,6 +78,13 @@ class SnippetController extends Controller
 
         $snippet = Snippet::create($validated);
 
+        \Log::info('Snippet created', [
+            'alias' => $snippet->alias,
+            'content_type' => $snippet->content_type,
+            'has_password' => $snippet->isProtected(),
+            'password_in_validated' => isset($validated['password']),
+        ]);
+
         $redirectTo = $snippet->content_type === 'url'
             ? route('home')
             : route('snippets.show', $snippet->alias);
@@ -95,13 +102,29 @@ class SnippetController extends Controller
     {
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
+        \Log::info('Snippet show', [
+            'alias' => $snippet->alias,
+            'is_protected' => $snippet->isProtected(),
+            'method' => request()->method(),
+            'has_password_input' => request()->has('password'),
+        ]);
+
         if ($snippet->isExpired()) {
             abort(410, 'Este cortito ha expirado.');
         }
 
         if ($snippet->isProtected()) {
             if (request()->isMethod('post')) {
-                if ($snippet->verifyPassword(request()->input('password', ''))) {
+                $passwordInput = request()->input('password', '');
+                $verified = $snippet->verifyPassword($passwordInput);
+
+                \Log::info('Password verification', [
+                    'alias' => $snippet->alias,
+                    'input_empty' => empty($passwordInput),
+                    'verified' => $verified,
+                ]);
+
+                if ($verified) {
                     return $this->resolveShowResponse($snippet);
                 }
 
@@ -153,6 +176,7 @@ class SnippetController extends Controller
                 }
                 : 'never',
             'is_public' => $snippet->is_public,
+            'has_password' => $snippet->isProtected(),
         ]);
     }
 
@@ -240,6 +264,7 @@ class SnippetController extends Controller
             'content' => ['required', 'string', 'max:'.(auth()->check() ? '1048576' : '5120')],
             'content_type' => ['required', 'in:text,url'],
             'language' => ['nullable', 'string', 'max:50'],
+            'password' => ['nullable', 'string', 'min:4', 'max:255'],
         ];
 
         if (auth()->check()) {

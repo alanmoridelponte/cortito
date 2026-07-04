@@ -19,7 +19,7 @@
 
     {{-- Slide-over panel --}}
     <div x-show="isOpen" x-cloak
-         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/5 lg:w-1/2"
+         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/4 lg:w-1/2"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="translate-x-full"
          x-transition:enter-end="translate-x-0"
@@ -163,6 +163,20 @@
                             </template>
                             <p class="ml-auto font-mono text-xs text-graphite-light" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
                         </div>
+                            <div class="mt-4">
+                                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contraseña (opcional)</label>
+                                <input
+                                    type="password"
+                                    x-model="form.password"
+                                    :placeholder="isEditing && hasPassword ? 'Dejar vacio para mantener la actual' : 'Minimo 4 caracteres'"
+                                    minlength="4"
+                                    maxlength="255"
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                                <p class="mt-1.5 text-xs text-graphite-light">Protege el contenido para que solo quien tenga la contraseña pueda verlo.</p>
+                                <template x-if="errors.password">
+                                    <p class="mt-1 text-xs text-danger" x-text="errors.password[0]"></p>
+                                </template>
+                            </div>
                     </div>
                 </template>
 
@@ -181,7 +195,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
-                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-graphite">Expiracion</label>
                                 <select x-model="form.ttl" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
@@ -198,16 +212,6 @@
                                     <option value="1">Publico</option>
                                     <option value="0">Privado</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label class="mb-1.5 block text-xs font-medium text-graphite">Contrasena</label>
-                                <input
-                                    type="password"
-                                    x-model="form.password"
-                                    placeholder="Minimo 4 caracteres"
-                                    minlength="4"
-                                    maxlength="255"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
                             </div>
                         </div>
                     </div>
@@ -283,6 +287,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         serverError: null,
         errors: {},
         showPremium: false,
+        hasPassword: false,
         debounceTimer: null,
         anonymousCount: anonymousCount,
         anonymousLimit: anonymousLimit,
@@ -348,6 +353,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                     this.form.title = data.title || '';
                     if (data.ttl) this.form.ttl = data.ttl;
                     if (data.is_public !== undefined) this.form.isPublic = data.is_public ? '1' : '0';
+                    this.hasPassword = data.has_password || false;
                 }
             } catch {
                 this.serverError = 'No se pudo cargar el cortito.';
@@ -362,6 +368,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             this.serverError = null;
             this.errors = {};
             this.showPremium = false;
+            this.hasPassword = false;
         },
 
         close() {
@@ -450,8 +457,11 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             @auth
                 body.ttl = this.form.ttl;
                 body.is_public = this.form.isPublic === '1';
-                body.password = this.form.password || null;
             @endauth
+
+            if (this.form.password) {
+                body.password = this.form.password;
+            }
 
             const url = this.isEditing
                 ? `{{ url('') }}/${this.editAlias}`
