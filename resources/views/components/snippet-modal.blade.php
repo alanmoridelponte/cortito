@@ -43,7 +43,7 @@
             </div>
 
             {{-- Body --}}
-            <div class="flex-1 overflow-y-auto px-6 py-6 slide-over-scrollbar">
+             <div class="flex-1 overflow-y-auto px-4 py-4 slide-over-scrollbar sm:px-6 sm:py-6">
                 {{-- Anonymous limit warning --}}
                 <template x-if="!isEditing && atLimit">
                     <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
@@ -53,11 +53,11 @@
                 </template>
 
                 {{-- Content type selector --}}
-                <div class="mb-6">
+                <div class="mb-4 sm:mb-6">
                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Tipo de contenido</label>
-                    <div class="flex gap-2">
+                    <div class="flex gap-1.5 sm:gap-2">
                         @foreach($contentTypes as $value => $label)
-                            <label class="flex-1 cursor-pointer rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
+                            <label class="flex-1 cursor-pointer whitespace-nowrap rounded-lg border-2 px-1.5 py-2 text-center transition-all duration-150 sm:px-2 sm:py-2.5 md:px-4 md:py-3"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
                                         'text' => 'border-mint bg-mint-light text-mint',
@@ -67,7 +67,7 @@
                                     : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
                             >
                                 <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only">
-                                <span class="font-display text-sm font-semibold">{{ $label }}</span>
+                                <span class="font-display text-xs font-semibold md:text-sm">{{ $label }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -75,52 +75,52 @@
 
                 {{-- Alias section (create only) --}}
                 <template x-if="!isEditing">
-                    <div class="mb-6">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Direccion del cortito</label>
-                        <div class="alias-input-wrapper flex items-stretch gap-2">
-                            <div class="relative flex-1">
-                                <span class="alias-domain">cortito.ar/</span>
+                    <div class="mb-4 sm:mb-6">
+                        <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-graphite-light sm:mb-2">Direccion del cortito</label>
+                        <div class="flex flex-col gap-1.5 sm:flex-row sm:gap-2">
+                            <div class="flex flex-1 items-stretch overflow-hidden rounded-lg border-2 transition-all"
+                                 :class="aliasAvailable === false
+                                     ? 'border-red-400'
+                                     : aliasAvailable === true
+                                         ? 'border-mint'
+                                         : 'border-border-warm'">
+                                <span class="inline-flex shrink-0 items-center border-r border-border-warm bg-cream/50 px-2 font-mono text-xs font-semibold text-graphite sm:px-2.5 sm:text-sm">cortito.ar/</span>
                                 <input
                                     type="text"
                                     x-model="form.alias"
                                     @input="onAliasInput()"
                                     maxlength="250"
-                                    placeholder="tu-alias"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-3 pr-3 pl-[8.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
-                                    :class="{
-                                        'border-red-400 focus:ring-2 focus:ring-red-500/20': aliasAvailable === false,
-                                        'border-mint focus:ring-2 focus:ring-mint/20': aliasAvailable === true,
-                                        'focus:border-celeste focus:ring-2 focus:ring-celeste-ring': aliasAvailable === null,
-                                    }"
+                                    placeholder="personaliza tu alias"
+                                    class="min-w-0 flex-1 bg-warm-white px-2 py-2.5 font-mono text-xs font-medium text-ink placeholder-graphite-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-celeste-ring sm:px-3 sm:py-3 sm:text-sm"
                                 >
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasChecking">
-                                    <svg class="h-4 w-4 animate-spin text-graphite-light" viewBox="0 0 24 24" fill="none">
+                                <div class="flex shrink-0 items-center pr-2 sm:pr-3" x-show="aliasChecking">
+                                    <svg class="h-3.5 w-3.5 animate-spin text-graphite-light sm:h-4 sm:w-4" viewBox="0 0 24 24" fill="none">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                                     </svg>
                                 </div>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasAvailable === true && !aliasChecking">
-                                    <span class="text-sm font-bold text-mint">&#10003;</span>
+                                <div class="flex shrink-0 items-center pr-2 sm:pr-3" x-show="aliasAvailable === true && !aliasChecking">
+                                    <span class="text-xs font-bold text-mint sm:text-sm">&#10003;</span>
                                 </div>
-                                <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasAvailable === false && !aliasChecking">
-                                    <span class="text-sm font-bold text-danger">&#10007;</span>
+                                <div class="flex shrink-0 items-center pr-2 sm:pr-3" x-show="aliasAvailable === false && !aliasChecking">
+                                    <span class="text-xs font-bold text-danger sm:text-sm">&#10007;</span>
                                 </div>
                             </div>
                             <button
                                 type="button"
                                 @click="reroll()"
                                 :disabled="rerolling"
-                                class="btn-press inline-flex items-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm font-medium text-graphite transition-all hover:border-celeste hover:text-celeste disabled:opacity-50">
-                                <svg class="h-4 w-4" :class="{'animate-spin': rerolling}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                class="btn-press inline-flex w-full items-center justify-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-xs font-medium text-graphite transition-all hover:border-celeste hover:text-celeste disabled:opacity-50 sm:w-auto sm:px-4 sm:py-3 sm:text-sm">
+                                <svg class="h-3.5 w-3.5 shrink-0 sm:h-4 sm:w-4" :class="{'animate-spin': rerolling}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M4 4v5h5M20 20v-5h-5"/>
                                     <path d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 014.51 15"/>
                                 </svg>
                                 Sugerir
                             </button>
                         </div>
-                        <p class="mt-2 text-xs text-graphite-light">Minimo 5 caracteres. Solo minusculas, numeros, puntos y guiones.</p>
+                        <p class="mt-1.5 text-xs text-graphite-light sm:mt-2">Minimo 5 caracteres. Solo minusculas, numeros, puntos y guiones.</p>
                         <template x-if="errors.alias">
-                            <div class="mt-1.5 space-y-0.5">
+                            <div class="mt-1 space-y-0.5 sm:mt-1.5">
                                 <template x-for="(err, i) in errors.alias" :key="i">
                                     <p class="text-xs text-danger" x-text="err"></p>
                                 </template>
@@ -131,7 +131,7 @@
 
                 {{-- URL input (url type only) --}}
                 <template x-if="form.contentType === 'url'">
-                    <div class="mb-6">
+                    <div class="mb-4 sm:mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
                         <input
                             type="url"
@@ -148,7 +148,7 @@
 
                 {{-- Text content (text type only) --}}
                 <template x-if="form.contentType === 'text'">
-                    <div class="mb-6">
+                    <div class="mb-4 sm:mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
                         <textarea
                             x-model="form.content"
