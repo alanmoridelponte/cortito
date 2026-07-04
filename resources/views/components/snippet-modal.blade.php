@@ -57,7 +57,7 @@
                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Tipo de contenido</label>
                     <div class="flex gap-2">
                         @foreach($contentTypes as $value => $label)
-                            <label class="flex-1 cursor-pointer rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
+                            <label class="flex-1 rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
                                         'url' => 'border-coral bg-coral-light text-coral',
@@ -65,8 +65,9 @@
                                         default => 'border-violet bg-violet-light text-violet',
                                     })
                                     : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
+                                :style="isEditing ? 'pointer-events: none; opacity: 0.6;' : ''"
                             >
-                                <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only">
+                                <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only" :disabled="isEditing">
                                 <span class="font-display text-sm font-semibold">{{ $label }}</span>
                             </label>
                         @endforeach
