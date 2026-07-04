@@ -11,7 +11,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
                 </svg>
             </div>
-            <h2 class="font-display text-xl font-bold text-ink">Contenido protegido</h2>
+            <h2 class="font-display text-xl font-bold text-ink">Anotador protegido</h2>
             <p class="mt-2 text-sm text-graphite">Ingresa la contraseña para ver el contenido.</p>
 
             <form method="POST" action="{{ route('snippets.show.password', $snippet->alias) }}" class="mt-6 space-y-3">
@@ -22,11 +22,11 @@
                     placeholder="Contraseña"
                     required
                     autofocus
-                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                 @error('password')
                     <p class="text-xs text-danger">{{ $message }}</p>
                 @enderror
-                <button type="submit" class="btn-press w-full rounded-lg bg-violet px-4 py-3 text-sm font-semibold text-white shadow-sm shadow-violet/20 transition-all hover:bg-violet-hover hover:shadow-md hover:shadow-violet/25 cursor-pointer">
+                <button type="submit" class="btn-press w-full rounded-lg bg-sol px-4 py-3 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25 cursor-pointer">
                     Desbloquear
                 </button>
             </form>
@@ -37,7 +37,7 @@
 
         {{-- Breadcrumb --}}
         <nav class="flex items-center gap-1.5 text-sm text-graphite-light">
-            <a href="{{ route('home') }}" class="font-medium text-graphite transition-colors hover:text-violet">Cortitos</a>
+            <a href="{{ route('home') }}" class="font-medium text-graphite transition-colors hover:text-celeste">Cortitos</a>
             <svg class="h-3.5 w-3.5 text-border-warm" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
             </svg>
@@ -77,7 +77,7 @@
                     @endif
                     @if($snippet->is_edited)
                         <span class="rounded-md bg-cream-dark px-2 py-0.5 text-xs font-medium text-graphite">
-                            Editado @if($snippet->edited_at) {{ $snippet->edited_at->diffForHumans() }} @endif
+                            editado @if($snippet->edited_at) {{ $snippet->edited_at->diffForHumans() }} @endif
                         </span>
                     @endif
                 </div>
@@ -131,7 +131,7 @@
                             }
                         "
                         class="inline-flex items-center gap-1 rounded-md px-2 py-1 transition-colors cursor-pointer"
-                        :class="copied ? 'text-mint bg-mint-light' : 'text-graphite hover:text-violet hover:bg-violet-light'">
+                        :class="copied ? 'text-mint bg-mint-light' : 'text-graphite hover:text-celeste hover:bg-celeste-light'">
                         <svg x-show="!copied" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
                         </svg>
@@ -148,7 +148,7 @@
                 <div class="flex items-center gap-2 shrink-0">
                     <button type="button"
                             @click="$dispatch('open-edit-modal', '{{ $snippet->alias }}')"
-                            class="btn-press inline-flex items-center gap-1.5 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2 text-sm font-medium text-graphite transition-all hover:border-violet hover:text-violet cursor-pointer">
+                            class="btn-press inline-flex items-center gap-1.5 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2 text-sm font-medium text-graphite transition-all hover:border-celeste hover:text-celeste cursor-pointer">
                         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                         </svg>
@@ -172,7 +172,7 @@
             @if($snippet->content_type === 'url')
                 <div class="p-6 text-center">
                     <p class="mb-2 text-sm text-graphite">Redirigiendo a:</p>
-                    <a href="{{ $snippet->content }}" class="font-mono text-sm font-medium text-violet break-all transition-colors hover:text-violet-hover">{{ $snippet->content }}</a>
+                    <a href="{{ $snippet->content }}" class="font-mono text-sm font-medium text-celeste break-all transition-colors hover:text-celeste-hover">{{ $snippet->content }}</a>
                 </div>
             @else
                 <div class="border-b border-border-light bg-cream/30 px-6 py-2">

@@ -2,19 +2,19 @@
 
 @php
     $typeConfig = [
-        'url' => [
-            'accent' => 'card-accent-url',
-            'bg' => 'bg-coral-light',
-            'text' => 'text-coral',
-            'label' => 'Enlace Acortador',
-            'icon' => 'link',
-        ],
         'text' => [
             'accent' => 'card-accent-text',
             'bg' => 'bg-mint-light',
             'text' => 'text-mint',
             'label' => 'Texto',
             'icon' => 'note',
+        ],
+        'url' => [
+            'accent' => 'card-accent-url',
+            'bg' => 'bg-coral-light',
+            'text' => 'text-coral',
+            'label' => 'Acortador',
+            'icon' => 'link',
         ],
     ];
     $config = $typeConfig[$snippet->content_type] ?? $typeConfig['text'];
@@ -27,27 +27,24 @@
     $expiryLabel = '';
     if ($snippet->expires_at) {
         $minutesLeft = now()->diffInMinutes($snippet->expires_at, false);
-        $hoursLeft = now()->diffInHours($snippet->expires_at, false);
         if ($minutesLeft < 0) {
             $expiryClass = 'expiry-urgent';
-            $expiryLabel = 'Vencido';
-        } elseif ($hoursLeft < 1) {
+            $expiryLabel = 'vencido';
+        } elseif ($minutesLeft < 1440) {
+            $hoursRemaining = (int) ceil($minutesLeft / 60);
             $expiryClass = 'expiry-urgent';
-            $expiryLabel = 'Vence en ' . max(1, round($minutesLeft)) . ' min';
-        } elseif ($hoursLeft < 24) {
-            $expiryClass = 'expiry-urgent';
-            $expiryLabel = 'Vence en ' . round($hoursLeft) . ' hs';
-        } elseif ($hoursLeft < 48) {
+            $expiryLabel = 'vence en ' . $hoursRemaining . 'h';
+        } elseif ($minutesLeft < 2880) {
             $expiryClass = 'expiry-soon';
-            $expiryLabel = 'Vence manana';
+            $expiryLabel = 'vence manana';
         } else {
-            $expiryLabel = 'Expira ' . $snippet->expires_at->diffForHumans();
+            $expiryLabel = 'expira ' . $snippet->expires_at->diffForHumans();
         }
     }
 @endphp
 
-<div class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
-     x-data="{ showDeleteConfirm: false, copied: false }">
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
+     x-data="{ showDeleteConfirm: false, copied: false, copyContent: @js($snippet->content_type === 'text' ? strip_tags($snippet->content) : null) }">
 
     {{-- Click area --}}
     @if($isUrl)
@@ -95,7 +92,7 @@
             @endif
             @if($snippet->is_edited)
                 <span class="rounded-md bg-cream-dark px-1.5 py-0.5 text-[11px] font-medium text-graphite">
-                    Editado
+                    editado
                 </span>
             @endif
             @if($snippet->isProtected())
@@ -107,12 +104,9 @@
                 </span>
             @endif
         </div>
-        @if($expiryLabel)
-            <p class="mb-3 text-xs {{ $expiryClass }}">{{ $expiryLabel }}</p>
-        @endif
 
         {{-- Alias (the star of the card) --}}
-        <h3 class="mb-1.5 font-mono text-lg font-bold tracking-tight text-ink leading-tight line-clamp-1 group-hover:text-violet transition-colors">
+        <h3 class="mb-1.5 font-mono text-lg font-bold tracking-tight text-ink leading-tight line-clamp-1 group-hover:text-celeste transition-colors">
             {{ $snippet->alias }}
         </h3>
 
@@ -132,7 +126,11 @@
     {{-- Footer --}}
     <div class="flex items-center justify-between border-t border-border-light bg-cream/40 px-5 py-3">
         <div class="flex items-center gap-2 text-xs">
-            <span class="text-graphite-light">{{ ucfirst($snippet->created_at->diffForHumans()) }}</span>
+            <span class="text-graphite-light">{{ $snippet->created_at->diffForHumans() }}</span>
+            @if($expiryLabel)
+                <span class="text-border-warm">&middot;</span>
+                <span class="{{ $expiryClass }}">{{ $expiryLabel }}</span>
+            @endif
         </div>
         <div class="flex items-center gap-3 text-xs text-graphite-light">
             <div class="flex items-center gap-1">
@@ -143,10 +141,10 @@
                 {{ $snippet->views_count }}
             </div>
             <button type="button"
-                    class="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium text-white transition-all duration-150 cursor-pointer btn-press"
-                    :class="copied ? 'bg-mint text-white' : 'bg-violet hover:bg-violet-hover'"
+                    class="inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium transition-all duration-150 btn-press"
+                    :class="copied ? 'bg-mint-light text-mint' : 'text-graphite-light hover:text-celeste hover:bg-celeste-light'"
                     @click="
-                        const text = '{{ route('snippets.show', $snippet->alias) }}';
+                        const text = copyContent || '{{ route('snippets.show', $snippet->alias) }}';
                         if (navigator.clipboard && navigator.clipboard.writeText) {
                             navigator.clipboard.writeText(text).then(() => { copied = true; setTimeout(() => copied = false, 2000); });
                         } else {
@@ -168,18 +166,18 @@
                 <svg x-show="copied" x-cloak class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span x-text="copied ? 'Copiado!' : 'Copiar enlace'"></span>
+                <span x-text="copied ? 'Copiado!' : 'Copiar'"></span>
             </button>
         </div>
     </div>
 
     {{-- Action buttons (visible on hover) --}}
     @if($snippet->canBeEditedBy(request()))
-        <div class="absolute right-3 top-3 flex items-center gap-1 rounded-lg border border-border-warm bg-warm-white p-1 shadow-sm">
+        <div class="absolute right-3 top-3 flex items-center gap-1 rounded-lg border border-border-warm bg-warm-white p-1 shadow-sm opacity-0 transition-opacity duration-150 group-hover:opacity-100">
             <a href="{{ route('snippets.edit', $snippet->alias) }}"
                onclick="event.preventDefault(); event.stopPropagation();"
                x-on:click.prevent="$dispatch('open-edit-modal', '{{ $snippet->alias }}')"
-               class="inline-flex h-7 w-7 items-center justify-center rounded-md text-graphite-light transition-colors hover:bg-violet-light hover:text-violet cursor-pointer"
+               class="inline-flex h-7 w-7 items-center justify-center rounded-md text-graphite-light transition-colors hover:bg-celeste-light hover:text-celeste cursor-pointer"
                title="Editar">
                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>

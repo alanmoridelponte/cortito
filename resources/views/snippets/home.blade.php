@@ -6,7 +6,7 @@
     <button
         type="button"
         onclick="window.dispatchEvent(new CustomEvent('open-create-modal'))"
-        class="btn-press inline-flex items-center gap-2 rounded-lg bg-violet px-4 py-2.5 text-sm font-semibold text-white shadow-sm shadow-violet/20 transition-all duration-150 hover:bg-violet-hover hover:shadow-md hover:shadow-violet/25 focus:outline-none focus-ring-violet">
+        class="btn-press inline-flex items-center gap-2 rounded-lg bg-sol px-4 py-2.5 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all duration-150 hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25 focus:outline-none focus-ring-celeste">
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
@@ -22,14 +22,14 @@
     @if($snippets->isEmpty())
         <div class="mb-10 text-center sm:text-left">
             <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tus cortitos</h1>
-            <p class="mt-2 text-base text-graphite">Enlaces acortados y notas temporales, listos para compartir.</p>
+            <p class="mt-2 text-base text-graphite">Links y notas temporales, listos para compartir.</p>
         </div>
     @else
         <div class="mb-8">
-            <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                     <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tus cortitos</h1>
-                    <p class="mt-1.5 text-base text-graphite">Enlaces acortados y notas temporales, listos para compartir.</p>
+                    <p class="mt-1.5 text-base text-graphite">Links y notas temporales, listos para compartir.</p>
                 </div>
 
                 {{-- Metrics --}}
@@ -38,13 +38,13 @@
                     $activeCount = count($allSnippets);
                     $totalViews = collect($allSnippets)->sum('views_count');
                     $expiringSoon = collect($allSnippets)->filter(function ($s) {
-                        return $s->expires_at && $s->expires_at->isFuture() && $s->expires_at->lte(now()->copy()->addHours(4));
+                        return $s->expires_at && $s->expires_at->isFuture() && $s->expires_at->diffInHours(now()) < 48;
                     })->count();
                 @endphp
-                <div class="flex flex-wrap items-center gap-3 text-sm">
+                <div class="flex items-center gap-3 text-sm">
                     <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
                         <span class="font-display font-bold text-ink">{{ $activeCount }}</span>
-                        <span class="text-graphite">Activos</span>
+                        <span class="text-graphite">activos</span>
                     </div>
                     <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
                         <svg class="h-3.5 w-3.5 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -52,7 +52,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                         <span class="font-display font-bold text-ink">{{ $totalViews }}</span>
-                        <span class="text-graphite">Vistas</span>
+                        <span class="text-graphite">vistas</span>
                     </div>
                     @if($expiringSoon > 0)
                         <div class="flex items-center gap-2 rounded-lg border border-amber/20 bg-amber-light px-3.5 py-2">
@@ -60,7 +60,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span class="font-display font-bold text-amber">{{ $expiringSoon }}</span>
-                            <span class="whitespace-nowrap text-graphite">Vence pronto</span>
+                            <span class="text-graphite">vence pronto</span>
                         </div>
                     @endif
                 </div>
@@ -73,15 +73,15 @@
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {{-- Search --}}
             <div class="relative flex-1 max-w-md">
-                <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+                <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 14z"/>
                 </svg>
                 <input
                     type="text"
                     x-model="search"
                     @input="applyFilters()"
                     placeholder="Buscar por titulo o alias..."
-                    class="w-full rounded-lg border border-border-warm bg-warm-white py-2.5 pl-10 pr-4 text-sm text-ink placeholder-graphite-light transition-colors focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                    class="w-full rounded-lg border border-border-warm bg-warm-white py-2.5 pl-10 pr-4 text-sm text-ink placeholder-graphite-light transition-colors focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
             </div>
 
             {{-- Filters --}}
@@ -122,8 +122,8 @@
     {{-- Empty state (no snippets at all) --}}
     @if($snippets->isEmpty())
         <div class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-border-warm bg-warm-white py-24">
-            <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-light">
-                <svg class="h-8 w-8 text-violet" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <div class="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-celeste-light">
+                <svg class="h-8 w-8 text-celeste" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 16.875h3.375m0 0h3.375m-3.375 0V13.5m0 3.375v3.375M6 10.5h2.25a2.25 2.25 0 002.25-2.25V6a2.25 2.25 0 00-2.25-2.25H6A2.25 2.25 0 003.75 6v2.25A2.25 2.25 0 006 10.5zm0 9.75h2.25A2.25 2.25 0 0010.5 18v-2.25a2.25 2.25 0 00-2.25-2.25H6a2.25 2.25 0 00-2.25 2.25V18A2.25 2.25 0 006 20.25zm9.75-9.75H18a2.25 2.25 0 002.25-2.25V6A2.25 2.25 0 0018 3.75h-2.25A2.25 2.25 0 0013.5 6v2.25a2.25 2.25 0 002.25 2.25z"/>
                 </svg>
             </div>
@@ -132,7 +132,7 @@
             <button
                 type="button"
                 onclick="window.dispatchEvent(new CustomEvent('open-create-modal'))"
-                class="btn-press inline-flex items-center gap-2 rounded-lg bg-violet px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-violet/20 transition-all duration-150 hover:bg-violet-hover hover:shadow-md hover:shadow-violet/25">
+                class="btn-press inline-flex items-center gap-2 rounded-lg bg-sol px-5 py-2.5 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all duration-150 hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25">
                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                 </svg>

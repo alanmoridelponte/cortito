@@ -19,7 +19,7 @@
 
     {{-- Slide-over panel --}}
     <div x-show="isOpen" x-cloak
-         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/4 lg:w-1/2"
+         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/5 lg:w-1/2"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="translate-x-full"
          x-transition:enter-end="translate-x-0"
@@ -43,7 +43,7 @@
             </div>
 
             {{-- Body --}}
-            <div class="flex-1 flex flex-col overflow-y-auto px-6 py-6 slide-over-scrollbar">
+            <div class="flex-1 overflow-y-auto px-6 py-6 slide-over-scrollbar">
                 {{-- Anonymous limit warning --}}
                 <template x-if="!isEditing && atLimit">
                     <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
@@ -57,17 +57,16 @@
                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Tipo de contenido</label>
                     <div class="flex gap-2">
                         @foreach($contentTypes as $value => $label)
-                            <label class="flex-1 rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
+                            <label class="flex-1 cursor-pointer rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
-                                        'url' => 'border-coral bg-coral-light text-coral',
                                         'text' => 'border-mint bg-mint-light text-mint',
-                                        default => 'border-violet bg-violet-light text-violet',
+                                        'url' => 'border-coral bg-coral-light text-coral',
+                                        default => 'border-celeste bg-celeste-light text-celeste',
                                     })
                                     : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
-                                :style="isEditing ? 'pointer-events: none; opacity: 0.6;' : ''"
                             >
-                                <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only" :disabled="isEditing">
+                                <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only">
                                 <span class="font-display text-sm font-semibold">{{ $label }}</span>
                             </label>
                         @endforeach
@@ -78,20 +77,20 @@
                 <template x-if="!isEditing">
                     <div class="mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Direccion del cortito</label>
-                        <div class="alias-input-wrapper flex flex-col sm:flex-row sm:items-stretch gap-2">
+                        <div class="alias-input-wrapper flex items-stretch gap-2">
                             <div class="relative flex-1">
-                                <span class="alias-domain pt-2.5">cortito.ar/</span>
+                                <span class="alias-domain">cortito.ar/</span>
                                 <input
                                     type="text"
                                     x-model="form.alias"
                                     @input="onAliasInput()"
                                     maxlength="250"
                                     placeholder="tu-alias"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-2 pr-3 pl-[6.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-3 pr-3 pl-[8.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
                                     :class="{
                                         'border-red-400 focus:ring-2 focus:ring-red-500/20': aliasAvailable === false,
                                         'border-mint focus:ring-2 focus:ring-mint/20': aliasAvailable === true,
-                                        'focus:border-violet focus:ring-2 focus:ring-violet-ring': aliasAvailable === null,
+                                        'focus:border-celeste focus:ring-2 focus:ring-celeste-ring': aliasAvailable === null,
                                     }"
                                 >
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasChecking">
@@ -111,7 +110,7 @@
                                 type="button"
                                 @click="reroll()"
                                 :disabled="rerolling"
-                                class="btn-press inline-flex items-center justify-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-2 text-sm font-medium text-graphite transition-all hover:border-violet hover:text-violet disabled:opacity-50 w-full sm:w-auto">
+                                class="btn-press inline-flex items-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm font-medium text-graphite transition-all hover:border-celeste hover:text-celeste disabled:opacity-50">
                                 <svg class="h-4 w-4" :class="{'animate-spin': rerolling}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M4 4v5h5M20 20v-5h-5"/>
                                     <path d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 014.51 15"/>
@@ -133,13 +132,13 @@
                 {{-- URL input (url type only) --}}
                 <template x-if="form.contentType === 'url'">
                     <div class="mb-6">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Enlace destino</label>
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
                         <input
                             type="url"
                             x-model="form.content"
                             placeholder="https://ejemplo.com/pagina"
                             required
-                            class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                            class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                         <p class="mt-2 text-xs text-graphite-light">Si el visitante llega con datos en el enlace, se mantienen al redirigir.</p>
                         <template x-if="errors.content">
                             <p class="mt-1.5 text-xs text-danger" x-text="errors.content[0]"></p>
@@ -149,14 +148,14 @@
 
                 {{-- Text content (text type only) --}}
                 <template x-if="form.contentType === 'text'">
-                    <div class="flex flex-col flex-1 mb-6">
+                    <div class="mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
                         <textarea
                             x-model="form.content"
                             placeholder="Escribi o pega tu nota aca..."
                             required
                             rows="14"
-                            class="w-full flex-1 resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring focus:bg-warm-white"
+                            class="w-full resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring focus:bg-warm-white"
                         ></textarea>
                         <div class="mt-2 flex items-center justify-between">
                             <template x-if="errors.content">
@@ -164,28 +163,14 @@
                             </template>
                             <p class="ml-auto font-mono text-xs text-graphite-light" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
                         </div>
-                            <div class="mt-4">
-                                <label class="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contraseña (opcional)</label>
-                                <input
-                                    type="password"
-                                    x-model="form.password"
-                                    :placeholder="isEditing && hasPassword ? 'Dejar vacio para mantener la actual' : 'Minimo 4 caracteres'"
-                                    minlength="4"
-                                    maxlength="255"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
-                                <p class="mt-1.5 text-xs text-graphite-light">Protege el contenido para que solo quien tenga la contraseña pueda verlo.</p>
-                                <template x-if="errors.password">
-                                    <p class="mt-1 text-xs text-danger" x-text="errors.password[0]"></p>
-                                </template>
-                            </div>
                     </div>
                 </template>
 
                 {{-- Premium options (authenticated only) --}}
                 @auth
-                    <div class="rounded-xl border border-violet/20 bg-violet-light/50 p-5">
+                    <div class="rounded-xl border border-celeste/20 bg-celeste-light/50 p-5">
                         <button type="button" @click="showPremium = !showPremium"
-                                class="flex w-full items-center justify-between text-sm font-semibold text-violet">
+                                class="flex w-full items-center justify-between text-sm font-semibold text-celeste">
                             <span class="flex items-center gap-2">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
@@ -196,10 +181,10 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
-                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-graphite">Expiracion</label>
-                                <select x-model="form.ttl" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                                <select x-model="form.ttl" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                                     <option value="7d">7 dias</option>
                                     <option value="30d">30 dias</option>
                                     <option value="90d">90 dias</option>
@@ -209,10 +194,20 @@
                             </div>
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-graphite">Privacidad</label>
-                                <select x-model="form.isPublic" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                                <select x-model="form.isPublic" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                                     <option value="1">Publico</option>
                                     <option value="0">Privado</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label class="mb-1.5 block text-xs font-medium text-graphite">Contrasena</label>
+                                <input
+                                    type="password"
+                                    x-model="form.password"
+                                    placeholder="Minimo 4 caracteres"
+                                    minlength="4"
+                                    maxlength="255"
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                             </div>
                         </div>
                     </div>
@@ -230,7 +225,7 @@
                     <div class="text-xs text-graphite-light">
                         @auth
                             <span class="inline-flex items-center gap-1.5">
-                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-violet"></span>
+                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-sol"></span>
                                 Premium &middot; Expira: <span class="font-medium text-ink" x-text="ttlLabel"></span>
                             </span>
                         @else
@@ -249,7 +244,7 @@
                             type="button"
                             @click="submit()"
                             :disabled="submitting || (!isEditing && (atLimit || !form.content.trim() || aliasAvailable !== true || aliasChecking || form.alias.length < 5 || !/^[a-z0-9][a-z0-9.\-]*$/.test(form.alias))) || (isEditing && !form.content.trim()) || (form.contentType === 'url' && !isValidUrl(form.content))"
-                            class="btn-press inline-flex items-center gap-2 rounded-lg bg-violet px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-violet/20 transition-all duration-150 hover:bg-violet-hover hover:shadow-md hover:shadow-violet/25 focus:outline-none focus-ring-violet disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none">
+                            class="btn-press inline-flex items-center gap-2 rounded-lg bg-sol px-5 py-2.5 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all duration-150 hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25 focus:outline-none focus-ring-celeste disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none">
                             <svg x-show="submitting" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
@@ -274,7 +269,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         form: {
             alias: '',
             content: '',
-            contentType: 'url',
+            contentType: 'text',
             language: '',
             title: '',
             ttl: '7d',
@@ -288,7 +283,6 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         serverError: null,
         errors: {},
         showPremium: false,
-        hasPassword: false,
         debounceTimer: null,
         anonymousCount: anonymousCount,
         anonymousLimit: anonymousLimit,
@@ -354,7 +348,6 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                     this.form.title = data.title || '';
                     if (data.ttl) this.form.ttl = data.ttl;
                     if (data.is_public !== undefined) this.form.isPublic = data.is_public ? '1' : '0';
-                    this.hasPassword = data.has_password || false;
                 }
             } catch {
                 this.serverError = 'No se pudo cargar el cortito.';
@@ -362,14 +355,13 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         },
 
         resetForm() {
-            this.form = { alias: '', content: '', contentType: 'url', title: '', ttl: '7d', isPublic: '1', password: '' };
+            this.form = { alias: '', content: '', contentType: 'text', title: '', ttl: '7d', isPublic: '1', password: '' };
             this.aliasChecking = false;
             this.aliasAvailable = null;
             this.submitting = false;
             this.serverError = null;
             this.errors = {};
             this.showPremium = false;
-            this.hasPassword = false;
         },
 
         close() {
@@ -458,11 +450,8 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             @auth
                 body.ttl = this.form.ttl;
                 body.is_public = this.form.isPublic === '1';
+                body.password = this.form.password || null;
             @endauth
-
-            if (this.form.password) {
-                body.password = this.form.password;
-            }
 
             const url = this.isEditing
                 ? `{{ url('') }}/${this.editAlias}`

@@ -13,8 +13,8 @@
     <header class="border-b border-border-warm bg-warm-white/80 backdrop-blur-sm sticky top-0 z-40">
         <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-6">
             <a href="{{ route('home') }}" class="flex items-baseline gap-0.5 group">
-                <span class="font-display text-xl font-bold tracking-tight text-ink transition-colors group-hover:text-violet">cortito</span>
-                <span class="font-display text-xl font-medium text-violet">.ar</span>
+                <span class="font-display text-xl font-bold tracking-tight text-ink transition-colors group-hover:text-celeste">cortito</span>
+                <span class="font-display text-xl font-medium text-celeste">.ar</span>
             </a>
             <div class="flex items-center gap-3">
                 @yield('header-actions')

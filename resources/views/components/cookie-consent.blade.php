@@ -4,7 +4,7 @@
         x-show="hasConsent && wasDeclined"
         x-cloak
         @click="resetConsent()"
-        class="fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-warm-white shadow-lg border border-border-warm text-graphite-light transition-colors hover:text-violet hover:border-violet/30"
+        class="fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-warm-white shadow-lg border border-border-warm text-graphite-light transition-colors hover:text-celeste hover:border-celeste/30"
         title="Configurar cookies"
     >
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -28,7 +28,7 @@
             </p>
             <div class="flex gap-2">
                 <button @click="accept()"
-                        class="btn-press px-4 py-2 bg-violet text-white rounded-lg hover:bg-violet-hover text-sm font-semibold transition-colors shadow-sm shadow-violet/20">
+                        class="btn-press px-4 py-2 bg-sol text-ink rounded-lg hover:bg-sol-hover text-sm font-bold transition-colors shadow-sm shadow-sol/20">
                     Aceptar
                 </button>
                 <button @click="decline()"

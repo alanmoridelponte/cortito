@@ -17,20 +17,25 @@
     --color-border-warm: #E8E4DF;
     --color-border-light: #F0EDE8;
 
-    --color-violet: #7C3AED;
-    --color-violet-hover: #6D28D9;
-    --color-violet-light: #EDE9FE;
-    --color-violet-ring: #7C3AED33;
+    --color-celeste: #4A90D9;
+    --color-celeste-hover: #3A7BC8;
+    --color-celeste-light: #EBF3FC;
+    --color-celeste-ring: #4A90D933;
+
+    --color-sol: #E8B100;
+    --color-sol-hover: #CC9D00;
+    --color-sol-light: #FDF6DB;
+    --color-sol-ring: #E8B10033;
 
     --color-mint: #059669;
     --color-mint-hover: #047857;
     --color-mint-light: #ECFDF5;
     --color-mint-surface: #F0FDF4;
 
-    --color-coral: #EA580C;
-    --color-coral-hover: #DC2626;
-    --color-coral-light: #FFF7ED;
-    --color-coral-surface: #FFFBF5;
+    --color-coral: #E85D30;
+    --color-coral-hover: #D14D20;
+    --color-coral-light: #FFF1EC;
+    --color-coral-surface: #FFF8F5;
 
     --color-danger: #DC2626;
     --color-danger-hover: #B91C1C;
@@ -104,8 +109,8 @@
 .pagination nav span.active,
 .pagination nav span.current {
     color: white;
-    background: var(--color-violet);
-    border: 1px solid var(--color-violet);
+    background: var(--color-celeste);
+    border: 1px solid var(--color-celeste);
 }
 
 /* Alpine.js x-collapse transition */
@@ -124,10 +129,10 @@
     border-left: 3px solid var(--color-coral);
 }
 
-/* Focus ring violet */
-.focus-ring-violet:focus {
+/* Focus ring celeste */
+.focus-ring-celeste:focus {
     outline: none;
-    box-shadow: 0 0 0 2px var(--color-warm-white), 0 0 0 4px var(--color-violet-ring);
+    box-shadow: 0 0 0 2px var(--color-warm-white), 0 0 0 4px var(--color-celeste-ring);
 }
 
 /* Alias input domain prefix */
