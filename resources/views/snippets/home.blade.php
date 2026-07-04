@@ -44,7 +44,7 @@
                 <div class="flex flex-wrap items-center gap-3 text-sm">
                     <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
                         <span class="font-display font-bold text-ink">{{ $activeCount }}</span>
-                        <span class="text-graphite">activos</span>
+                        <span class="text-graphite">Activos</span>
                     </div>
                     <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
                         <svg class="h-3.5 w-3.5 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -52,7 +52,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                         <span class="font-display font-bold text-ink">{{ $totalViews }}</span>
-                        <span class="text-graphite">vistas</span>
+                        <span class="text-graphite">Vistas</span>
                     </div>
                     @if($expiringSoon > 0)
                         <div class="flex items-center gap-2 rounded-lg border border-amber/20 bg-amber-light px-3.5 py-2">
@@ -60,7 +60,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span class="font-display font-bold text-amber">{{ $expiringSoon }}</span>
-                            <span class="whitespace-nowrap text-graphite">vence pronto</span>
+                            <span class="whitespace-nowrap text-graphite">Vence pronto</span>
                         </div>
                     @endif
                 </div>
@@ -73,8 +73,8 @@
         <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {{-- Search --}}
             <div class="relative flex-1 max-w-md">
-                <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 14z"/>
+                <svg class="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
                 </svg>
                 <input
                     type="text"

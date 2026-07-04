@@ -26,23 +26,27 @@
     $expiryClass = 'expiry-normal';
     $expiryLabel = '';
     if ($snippet->expires_at) {
+        $minutesLeft = now()->diffInMinutes($snippet->expires_at, false);
         $hoursLeft = now()->diffInHours($snippet->expires_at, false);
-        if ($hoursLeft < 0) {
+        if ($minutesLeft < 0) {
             $expiryClass = 'expiry-urgent';
-            $expiryLabel = 'vencido';
+            $expiryLabel = 'Vencido';
+        } elseif ($hoursLeft < 1) {
+            $expiryClass = 'expiry-urgent';
+            $expiryLabel = 'Vence en ' . max(1, round($minutesLeft)) . ' min';
         } elseif ($hoursLeft < 24) {
             $expiryClass = 'expiry-urgent';
-            $expiryLabel = 'vence hoy';
+            $expiryLabel = 'Vence en ' . round($hoursLeft) . ' hs';
         } elseif ($hoursLeft < 48) {
             $expiryClass = 'expiry-soon';
-            $expiryLabel = 'vence manana';
+            $expiryLabel = 'Vence manana';
         } else {
-            $expiryLabel = 'expira ' . $snippet->expires_at->diffForHumans();
+            $expiryLabel = 'Expira ' . $snippet->expires_at->diffForHumans();
         }
     }
 @endphp
 
-<div class="group relative flex flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
+<div class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
      x-data="{ showDeleteConfirm: false, copied: false, copyContent: @js($snippet->content_type === 'text' ? strip_tags($snippet->content) : null) }">
 
     {{-- Click area --}}
@@ -103,6 +107,9 @@
                 </span>
             @endif
         </div>
+        @if($expiryLabel)
+            <p class="mb-3 text-xs {{ $expiryClass }}">{{ $expiryLabel }}</p>
+        @endif
 
         {{-- Alias (the star of the card) --}}
         <h3 class="mb-1.5 font-mono text-lg font-bold tracking-tight text-ink leading-tight line-clamp-1 group-hover:text-violet transition-colors">
@@ -125,11 +132,7 @@
     {{-- Footer --}}
     <div class="flex items-center justify-between border-t border-border-light bg-cream/40 px-5 py-3">
         <div class="flex items-center gap-2 text-xs">
-            <span class="text-graphite-light">{{ $snippet->created_at->diffForHumans() }}</span>
-            @if($expiryLabel)
-                <span class="text-border-warm">&middot;</span>
-                <span class="{{ $expiryClass }}">{{ $expiryLabel }}</span>
-            @endif
+            <span class="text-graphite-light">{{ ucfirst($snippet->created_at->diffForHumans()) }}</span>
         </div>
         <div class="flex items-center gap-3 text-xs text-graphite-light">
             <div class="flex items-center gap-1">
@@ -140,8 +143,8 @@
                 {{ $snippet->views_count }}
             </div>
             <button type="button"
-                    class="inline-flex items-center gap-1 rounded-md px-2 py-1 font-medium transition-all duration-150 btn-press"
-                    :class="copied ? 'bg-mint-light text-mint' : 'text-graphite-light hover:text-violet hover:bg-violet-light'"
+                    class="inline-flex shrink-0 items-center gap-1 whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium text-white transition-all duration-150 cursor-pointer btn-press"
+                    :class="copied ? 'bg-mint text-white' : 'bg-violet hover:bg-violet-hover'"
                     @click="
                         const text = copyContent || '{{ route('snippets.show', $snippet->alias) }}';
                         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -165,7 +168,7 @@
                 <svg x-show="copied" x-cloak class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span x-text="copied ? 'Copiado!' : 'Copiar'"></span>
+                <span x-text="copied ? 'Copiado!' : 'Copiar enlace'"></span>
             </button>
         </div>
     </div>
