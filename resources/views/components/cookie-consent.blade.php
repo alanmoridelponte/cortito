@@ -4,7 +4,7 @@
         x-show="hasConsent && wasDeclined"
         x-cloak
         @click="resetConsent()"
-        class="fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-white shadow-lg border border-gray-200 text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-colors"
+        class="fixed bottom-4 right-4 z-40 flex h-10 w-10 items-center justify-center rounded-full bg-warm-white shadow-lg border border-border-warm text-graphite-light transition-colors hover:text-violet hover:border-violet/30"
         title="Configurar cookies"
     >
         <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -20,19 +20,19 @@
     {{-- Banner de consentimiento --}}
     <div x-show="!hasConsent" x-cloak
          class="fixed bottom-4 right-4 z-50" x-transition>
-        <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm border border-gray-200">
-            <h3 class="text-lg font-bold mb-2">Cookies de propiedad</h3>
-            <p class="text-sm text-gray-600 mb-4">
+        <div class="bg-warm-white rounded-xl shadow-xl p-6 max-w-sm border border-border-warm">
+            <h3 class="font-display text-lg font-bold mb-2 text-ink">Cookies de propiedad</h3>
+            <p class="text-sm text-graphite mb-4 leading-relaxed">
                 Para poder editar o eliminar tus cortitos, necesitamos guardar una cookie
                 que nos permita identificar que eres el propietario. ¿Aceptas?
             </p>
             <div class="flex gap-2">
                 <button @click="accept()"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 text-sm font-medium">
+                        class="btn-press px-4 py-2 bg-violet text-white rounded-lg hover:bg-violet-hover text-sm font-semibold transition-colors shadow-sm shadow-violet/20">
                     Aceptar
                 </button>
                 <button @click="decline()"
-                        class="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 text-sm font-medium">
+                        class="px-4 py-2 bg-cream-dark text-graphite rounded-lg hover:bg-border-warm text-sm font-medium transition-colors">
                     Rechazar
                 </button>
             </div>

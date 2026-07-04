@@ -6,6 +6,38 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+    --color-cream: #FAF8F5;
+    --color-cream-dark: #F3F0EB;
+    --color-warm-white: #FFFFFF;
+    --color-ink: #1A1A1A;
+    --color-graphite: #6B6B6B;
+    --color-graphite-light: #9A9A9A;
+    --color-border-warm: #E8E4DF;
+    --color-border-light: #F0EDE8;
+
+    --color-violet: #7C3AED;
+    --color-violet-hover: #6D28D9;
+    --color-violet-light: #EDE9FE;
+    --color-violet-ring: #7C3AED33;
+
+    --color-mint: #059669;
+    --color-mint-hover: #047857;
+    --color-mint-light: #ECFDF5;
+    --color-mint-surface: #F0FDF4;
+
+    --color-coral: #EA580C;
+    --color-coral-hover: #DC2626;
+    --color-coral-light: #FFF7ED;
+    --color-coral-surface: #FFFBF5;
+
+    --color-danger: #DC2626;
+    --color-danger-hover: #B91C1C;
+    --color-danger-light: #FEF2F2;
+
+    --color-amber: #D97706;
+    --color-amber-light: #FFFBEB;
 }
 
 @layer utilities {
@@ -60,24 +92,20 @@
     transition: all 0.15s ease;
 }
 .pagination nav a {
-    color: #6b7280;
-    background: white;
-    border: 1px solid #e5e7eb;
+    color: var(--color-graphite);
+    background: var(--color-warm-white);
+    border: 1px solid var(--color-border-warm);
 }
 .pagination nav a:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
-    color: #374151;
+    background: var(--color-cream);
+    border-color: #D1CDC7;
+    color: var(--color-ink);
 }
-.pagination nav span.active {
-    color: white;
-    background: #4f46e5;
-    border: 1px solid #4f46e5;
-}
+.pagination nav span.active,
 .pagination nav span.current {
     color: white;
-    background: #4f46e5;
-    border: 1px solid #4f46e5;
+    background: var(--color-violet);
+    border: 1px solid var(--color-violet);
 }
 
 /* Alpine.js x-collapse transition */
@@ -86,4 +114,55 @@
 }
 [x-collapse].collapse {
     transition: height 0.2s ease-out;
+}
+
+/* Card type accent — left border stripe */
+.card-accent-text {
+    border-left: 3px solid var(--color-mint);
+}
+.card-accent-url {
+    border-left: 3px solid var(--color-coral);
+}
+
+/* Focus ring violet */
+.focus-ring-violet:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-warm-white), 0 0 0 4px var(--color-violet-ring);
+}
+
+/* Alias input domain prefix */
+.alias-input-wrapper {
+    position: relative;
+}
+.alias-input-wrapper .alias-domain {
+    position: absolute;
+    inset-y: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    padding-left: 0.875rem;
+    font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-graphite-light);
+    pointer-events: none;
+    letter-spacing: -0.01em;
+}
+
+/* Expiry urgency states */
+.expiry-urgent {
+    color: var(--color-danger);
+    font-weight: 600;
+}
+.expiry-soon {
+    color: var(--color-amber);
+    font-weight: 500;
+}
+.expiry-normal {
+    color: var(--color-graphite-light);
+}
+
+/* Microinteraction: subtle press effect on buttons */
+.btn-press:active {
+    transform: scale(0.97);
 }

@@ -7,7 +7,7 @@
 
     {{-- Overlay --}}
     <div x-show="isOpen" x-cloak
-         class="fixed inset-0 z-50 bg-black/40"
+         class="fixed inset-0 z-50 bg-ink/40 backdrop-blur-[2px]"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
@@ -19,7 +19,7 @@
 
     {{-- Slide-over panel --}}
     <div x-show="isOpen" x-cloak
-         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/4"
+         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/5 lg:w-1/2"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="translate-x-full"
          x-transition:enter-end="translate-x-0"
@@ -27,12 +27,15 @@
          x-transition:leave-start="translate-x-0"
          x-transition:leave-end="translate-x-full">
 
-        <div class="flex w-full flex-col bg-white shadow-2xl" @click.stop>
+        <div class="flex w-full flex-col bg-warm-white shadow-2xl" @click.stop>
 
             {{-- Header --}}
-            <div class="flex items-center justify-between border-b border-gray-200 px-6 py-4">
-                <h2 class="text-lg font-semibold text-gray-900" x-text="isEditing ? 'Editar ' + editAlias : 'Crear cortito'"></h2>
-                <button @click="close()" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+            <div class="flex items-center justify-between border-b border-border-warm px-6 py-5">
+                <div>
+                    <h2 class="font-display text-lg font-bold text-ink" x-text="isEditing ? 'Editar ' + editAlias : 'Crear cortito'"></h2>
+                    <p class="mt-0.5 text-xs text-graphite-light" x-text="isEditing ? 'Modifica el contenido de tu cortito' : 'Elegi el tipo y escribi tu contenido'"></p>
+                </div>
+                <button @click="close()" class="inline-flex h-8 w-8 items-center justify-center rounded-lg text-graphite-light transition-colors hover:bg-cream-dark hover:text-ink">
                     <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -40,31 +43,31 @@
             </div>
 
             {{-- Body --}}
-            <div class="flex-1 overflow-y-auto px-6 py-5">
+            <div class="flex-1 overflow-y-auto px-6 py-6 slide-over-scrollbar">
                 {{-- Anonymous limit warning --}}
                 <template x-if="!isEditing && atLimit">
-                    <div class="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+                    <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
                         Alcanzaste el limite de <span x-text="anonymousLimit"></span> cortitos gratuitos.
-                        <a href="#" class="font-medium underline hover:text-amber-900">Registrate</a> para crear ilimitados.
+                        <a href="#" class="font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">Registrate</a> para crear ilimitados.
                     </div>
                 </template>
 
-                {{-- Content type --}}
-                <div class="mb-5">
-                    <label class="mb-1.5 block text-sm font-medium text-gray-700">Tipo de contenido</label>
-                    <div class="flex flex-wrap gap-2">
+                {{-- Content type selector --}}
+                <div class="mb-6">
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Tipo de contenido</label>
+                    <div class="flex gap-2">
                         @foreach($contentTypes as $value => $label)
-                            <label class="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border px-3.5 py-2 text-sm font-medium transition-all duration-150"
+                            <label class="flex-1 cursor-pointer rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
-                                        'text' => 'border-green-300 bg-green-50 text-green-700 ring-1 ring-green-200',
-                                        'url' => 'border-orange-300 bg-orange-50 text-orange-700 ring-1 ring-orange-200',
-                                        default => 'border-indigo-300 bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200',
+                                        'text' => 'border-mint bg-mint-light text-mint',
+                                        'url' => 'border-coral bg-coral-light text-coral',
+                                        default => 'border-violet bg-violet-light text-violet',
                                     })
-                                    : 'border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50'"
+                                    : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
                             >
                                 <input type="radio" name="content_type" value="{{ $value }}" x-model="form.contentType" class="sr-only">
-                                {{ $label }}
+                                <span class="font-display text-sm font-semibold">{{ $label }}</span>
                             </label>
                         @endforeach
                     </div>
@@ -72,40 +75,42 @@
 
                 {{-- Alias section (create only) --}}
                 <template x-if="!isEditing">
-                    <div class="mb-5">
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700">Direccion del cortito</label>
-                        <div class="flex items-stretch gap-2">
+                    <div class="mb-6">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Direccion del cortito</label>
+                        <div class="alias-input-wrapper flex items-stretch gap-2">
                             <div class="relative flex-1">
-                                <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-sm text-gray-400">cortito.ar/</span>
+                                <span class="alias-domain">cortito.ar/</span>
                                 <input
                                     type="text"
                                     x-model="form.alias"
                                     @input="onAliasInput()"
                                     maxlength="250"
-                                    class="w-full rounded-lg border border-gray-300 py-2.5 pr-3 pl-20 text-sm font-mono focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                                    placeholder="tu-alias"
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-3 pr-3 pl-[8.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
                                     :class="{
-                                        'border-red-300 focus:border-red-500 focus:ring-red-500/20': aliasAvailable === false,
-                                        'border-green-400 focus:border-green-500 focus:ring-green-500/20': aliasAvailable === true,
+                                        'border-red-400 focus:ring-2 focus:ring-red-500/20': aliasAvailable === false,
+                                        'border-mint focus:ring-2 focus:ring-mint/20': aliasAvailable === true,
+                                        'focus:border-violet focus:ring-2 focus:ring-violet-ring': aliasAvailable === null,
                                     }"
                                 >
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasChecking">
-                                    <svg class="h-4 w-4 animate-spin text-gray-400" viewBox="0 0 24 24" fill="none">
+                                    <svg class="h-4 w-4 animate-spin text-graphite-light" viewBox="0 0 24 24" fill="none">
                                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
                                     </svg>
                                 </div>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasAvailable === true && !aliasChecking">
-                                    <span class="text-sm text-green-500">&#10003;</span>
+                                    <span class="text-sm font-bold text-mint">&#10003;</span>
                                 </div>
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3" x-show="aliasAvailable === false && !aliasChecking">
-                                    <span class="text-sm text-red-400">&#10007;</span>
+                                    <span class="text-sm font-bold text-danger">&#10007;</span>
                                 </div>
                             </div>
                             <button
                                 type="button"
                                 @click="reroll()"
                                 :disabled="rerolling"
-                                class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50">
+                                class="btn-press inline-flex items-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm font-medium text-graphite transition-all hover:border-violet hover:text-violet disabled:opacity-50">
                                 <svg class="h-4 w-4" :class="{'animate-spin': rerolling}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M4 4v5h5M20 20v-5h-5"/>
                                     <path d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 014.51 15"/>
@@ -113,11 +118,11 @@
                                 Sugerir
                             </button>
                         </div>
-                        <p class="mt-1.5 text-xs text-gray-400">Minimo 5 caracteres. Solo minusculas, numeros, puntos y guiones.</p>
+                        <p class="mt-2 text-xs text-graphite-light">Minimo 5 caracteres. Solo minusculas, numeros, puntos y guiones.</p>
                         <template x-if="errors.alias">
-                            <div class="mt-1 space-y-0.5">
+                            <div class="mt-1.5 space-y-0.5">
                                 <template x-for="(err, i) in errors.alias" :key="i">
-                                    <p class="text-xs text-red-500" x-text="err"></p>
+                                    <p class="text-xs text-danger" x-text="err"></p>
                                 </template>
                             </div>
                         </template>
@@ -126,55 +131,60 @@
 
                 {{-- URL input (url type only) --}}
                 <template x-if="form.contentType === 'url'">
-                    <div class="mb-5">
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700">URL destino</label>
+                    <div class="mb-6">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
                         <input
                             type="url"
                             x-model="form.content"
                             placeholder="https://ejemplo.com/pagina"
                             required
-                            class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
-                        <p class="mt-1.5 text-xs text-gray-400">Si el visitante llega con datos en el enlace, se mantienen al redirigir.</p>
+                            class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
+                        <p class="mt-2 text-xs text-graphite-light">Si el visitante llega con datos en el enlace, se mantienen al redirigir.</p>
                         <template x-if="errors.content">
-                            <p class="mt-1 text-xs text-red-500" x-text="errors.content[0]"></p>
+                            <p class="mt-1.5 text-xs text-danger" x-text="errors.content[0]"></p>
                         </template>
                     </div>
                 </template>
 
                 {{-- Text content (text type only) --}}
                 <template x-if="form.contentType === 'text'">
-                    <div class="mb-5">
-                        <label class="mb-1.5 block text-sm font-medium text-gray-700">Contenido</label>
+                    <div class="mb-6">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
                         <textarea
                             x-model="form.content"
                             placeholder="Escribi o pega tu nota aca..."
                             required
                             rows="14"
-                            class="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 font-mono text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
+                            class="w-full resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring focus:bg-warm-white"
                         ></textarea>
-                        <div class="mt-1.5 flex items-center justify-between">
+                        <div class="mt-2 flex items-center justify-between">
                             <template x-if="errors.content">
-                                <p class="text-xs text-red-500" x-text="errors.content[0]"></p>
+                                <p class="text-xs text-danger" x-text="errors.content[0]"></p>
                             </template>
-                            <p class="ml-auto text-xs text-gray-400" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
+                            <p class="ml-auto font-mono text-xs text-graphite-light" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
                         </div>
                     </div>
                 </template>
 
                 {{-- Premium options (authenticated only) --}}
                 @auth
-                    <div class="rounded-lg border border-indigo-100 bg-indigo-50/50 p-4">
+                    <div class="rounded-xl border border-violet/20 bg-violet-light/50 p-5">
                         <button type="button" @click="showPremium = !showPremium"
-                                class="flex w-full items-center justify-between text-sm font-medium text-indigo-800">
-                            <span>Opciones premium</span>
+                                class="flex w-full items-center justify-between text-sm font-semibold text-violet">
+                            <span class="flex items-center gap-2">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
+                                </svg>
+                                Opciones premium
+                            </span>
                             <svg class="h-4 w-4 transition-transform duration-200" :class="{'rotate-180': showPremium}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
                         <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
                             <div>
-                                <label class="mb-1 block text-xs font-medium text-gray-600">Expiracion</label>
-                                <select x-model="form.ttl" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
+                                <label class="mb-1.5 block text-xs font-medium text-graphite">Expiracion</label>
+                                <select x-model="form.ttl" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
                                     <option value="7d">7 dias</option>
                                     <option value="30d">30 dias</option>
                                     <option value="90d">90 dias</option>
@@ -183,21 +193,21 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="mb-1 block text-xs font-medium text-gray-600">Privacidad</label>
-                                <select x-model="form.isPublic" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
+                                <label class="mb-1.5 block text-xs font-medium text-graphite">Privacidad</label>
+                                <select x-model="form.isPublic" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
                                     <option value="1">Publico</option>
                                     <option value="0">Privado</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="mb-1 block text-xs font-medium text-gray-600">Contrasena</label>
+                                <label class="mb-1.5 block text-xs font-medium text-graphite">Contrasena</label>
                                 <input
                                     type="password"
                                     x-model="form.password"
                                     placeholder="Minimo 4 caracteres"
                                     minlength="4"
                                     maxlength="255"
-                                    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20">
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring">
                             </div>
                         </div>
                     </div>
@@ -205,30 +215,36 @@
 
                 {{-- Server error --}}
                 <template x-if="serverError">
-                    <div class="mt-4 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700" x-text="serverError"></div>
+                    <div class="mt-5 rounded-lg border border-danger/30 bg-danger-light p-3.5 text-sm font-medium text-danger" x-text="serverError"></div>
                 </template>
             </div>
 
             {{-- Footer --}}
-            <div class="border-t border-gray-200 px-6 py-4">
+            <div class="border-t border-border-warm bg-cream/40 px-6 py-4">
                 <div class="flex items-center justify-between">
-                    <div class="text-xs text-gray-400">
+                    <div class="text-xs text-graphite-light">
                         @auth
-                            Premium &middot; Expira: <span x-text="ttlLabel"></span>
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-violet"></span>
+                                Premium &middot; Expira: <span class="font-medium text-ink" x-text="ttlLabel"></span>
+                            </span>
                         @else
-                            Gratis &middot; <span x-text="anonymousCount + '/' + anonymousLimit"></span> &middot; Expira en 24hs
+                            <span class="inline-flex items-center gap-1.5">
+                                <span class="inline-block h-1.5 w-1.5 rounded-full bg-graphite-light"></span>
+                                Gratis &middot; <span x-text="anonymousCount + '/' + anonymousLimit"></span> &middot; Expira en 24hs
+                            </span>
                         @endauth
                     </div>
                     <div class="flex items-center gap-2">
                         <button @click="close()"
-                                class="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                class="rounded-lg border border-border-warm bg-warm-white px-4 py-2.5 text-sm font-medium text-graphite transition-colors hover:bg-cream-dark">
                             Cancelar
                         </button>
                         <button
                             type="button"
                             @click="submit()"
                             :disabled="submitting || (!isEditing && (atLimit || !form.content.trim() || aliasAvailable !== true || aliasChecking || form.alias.length < 5 || !/^[a-z0-9][a-z0-9.\-]*$/.test(form.alias))) || (isEditing && !form.content.trim()) || (form.contentType === 'url' && !isValidUrl(form.content))"
-                            class="inline-flex items-center gap-2 rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                            class="btn-press inline-flex items-center gap-2 rounded-lg bg-violet px-5 py-2.5 text-sm font-semibold text-white shadow-sm shadow-violet/20 transition-all duration-150 hover:bg-violet-hover hover:shadow-md hover:shadow-violet/25 focus:outline-none focus-ring-violet disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none">
                             <svg x-show="submitting" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
