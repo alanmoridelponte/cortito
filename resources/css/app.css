@@ -143,8 +143,8 @@
     padding-left: 0.75rem;
     font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
     font-size: 0.8125rem;
-    font-weight: 500;
-    color: var(--color-graphite-light);
+    font-weight: 600;
+    color: var(--color-graphite);
     pointer-events: none;
     letter-spacing: -0.01em;
 }

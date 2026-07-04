@@ -38,7 +38,7 @@
                     $activeCount = count($allSnippets);
                     $totalViews = collect($allSnippets)->sum('views_count');
                     $expiringSoon = collect($allSnippets)->filter(function ($s) {
-                        return $s->expires_at && $s->expires_at->isFuture() && $s->expires_at->diffInHours(now()) < 48;
+                        return $s->expires_at && $s->expires_at->isFuture() && $s->expires_at->lte(now()->copy()->addHours(4));
                     })->count();
                 @endphp
                 <div class="flex flex-wrap items-center gap-3 text-sm">

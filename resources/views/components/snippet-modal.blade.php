@@ -43,7 +43,7 @@
             </div>
 
             {{-- Body --}}
-            <div class="flex-1 overflow-y-auto px-6 py-6 slide-over-scrollbar">
+            <div class="flex-1 flex flex-col overflow-y-auto px-6 py-6 slide-over-scrollbar">
                 {{-- Anonymous limit warning --}}
                 <template x-if="!isEditing && atLimit">
                     <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
@@ -60,8 +60,8 @@
                             <label class="flex-1 cursor-pointer rounded-lg border-2 px-4 py-3 text-center transition-all duration-150"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
-                                        'text' => 'border-mint bg-mint-light text-mint',
                                         'url' => 'border-coral bg-coral-light text-coral',
+                                        'text' => 'border-mint bg-mint-light text-mint',
                                         default => 'border-violet bg-violet-light text-violet',
                                     })
                                     : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
@@ -77,16 +77,16 @@
                 <template x-if="!isEditing">
                     <div class="mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Direccion del cortito</label>
-                        <div class="alias-input-wrapper flex items-stretch gap-2">
+                        <div class="alias-input-wrapper flex flex-col sm:flex-row sm:items-stretch gap-2">
                             <div class="relative flex-1">
-                                <span class="alias-domain">cortito.ar/</span>
+                                <span class="alias-domain pt-2.5">cortito.ar/</span>
                                 <input
                                     type="text"
                                     x-model="form.alias"
                                     @input="onAliasInput()"
                                     maxlength="250"
                                     placeholder="tu-alias"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-3 pr-3 pl-[8.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
+                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white py-2 pr-3 pl-[6.5rem] font-mono text-sm font-medium text-ink placeholder-graphite-light transition-all focus:outline-none"
                                     :class="{
                                         'border-red-400 focus:ring-2 focus:ring-red-500/20': aliasAvailable === false,
                                         'border-mint focus:ring-2 focus:ring-mint/20': aliasAvailable === true,
@@ -110,7 +110,7 @@
                                 type="button"
                                 @click="reroll()"
                                 :disabled="rerolling"
-                                class="btn-press inline-flex items-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm font-medium text-graphite transition-all hover:border-violet hover:text-violet disabled:opacity-50">
+                                class="btn-press inline-flex items-center justify-center gap-1.5 rounded-lg border-2 border-border-warm bg-warm-white px-4 py-2 text-sm font-medium text-graphite transition-all hover:border-violet hover:text-violet disabled:opacity-50 w-full sm:w-auto">
                                 <svg class="h-4 w-4" :class="{'animate-spin': rerolling}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M4 4v5h5M20 20v-5h-5"/>
                                     <path d="M20.49 9A9 9 0 005.64 5.64L4 4m16 16l-1.64-1.64A9 9 0 014.51 15"/>
@@ -132,7 +132,7 @@
                 {{-- URL input (url type only) --}}
                 <template x-if="form.contentType === 'url'">
                     <div class="mb-6">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Enlace destino</label>
                         <input
                             type="url"
                             x-model="form.content"
@@ -148,14 +148,14 @@
 
                 {{-- Text content (text type only) --}}
                 <template x-if="form.contentType === 'text'">
-                    <div class="mb-6">
+                    <div class="flex flex-col flex-1 mb-6">
                         <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
                         <textarea
                             x-model="form.content"
                             placeholder="Escribi o pega tu nota aca..."
                             required
                             rows="14"
-                            class="w-full resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring focus:bg-warm-white"
+                            class="w-full flex-1 resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet-ring focus:bg-warm-white"
                         ></textarea>
                         <div class="mt-2 flex items-center justify-between">
                             <template x-if="errors.content">
@@ -269,7 +269,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         form: {
             alias: '',
             content: '',
-            contentType: 'text',
+            contentType: 'url',
             language: '',
             title: '',
             ttl: '7d',
@@ -355,7 +355,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         },
 
         resetForm() {
-            this.form = { alias: '', content: '', contentType: 'text', title: '', ttl: '7d', isPublic: '1', password: '' };
+            this.form = { alias: '', content: '', contentType: 'url', title: '', ttl: '7d', isPublic: '1', password: '' };
             this.aliasChecking = false;
             this.aliasAvailable = null;
             this.submitting = false;

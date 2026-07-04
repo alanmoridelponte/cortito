@@ -2,19 +2,19 @@
 
 @php
     $typeConfig = [
+        'url' => [
+            'accent' => 'card-accent-url',
+            'bg' => 'bg-coral-light',
+            'text' => 'text-coral',
+            'label' => 'Enlace Acortador',
+            'icon' => 'link',
+        ],
         'text' => [
             'accent' => 'card-accent-text',
             'bg' => 'bg-mint-light',
             'text' => 'text-mint',
             'label' => 'Texto',
             'icon' => 'note',
-        ],
-        'url' => [
-            'accent' => 'card-accent-url',
-            'bg' => 'bg-coral-light',
-            'text' => 'text-coral',
-            'label' => 'Acortador',
-            'icon' => 'link',
         ],
     ];
     $config = $typeConfig[$snippet->content_type] ?? $typeConfig['text'];
