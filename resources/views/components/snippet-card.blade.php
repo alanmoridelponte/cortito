@@ -172,7 +172,7 @@
 
     {{-- Action buttons (visible on hover) --}}
     @if($snippet->canBeEditedBy(request()))
-        <div class="absolute right-3 top-3 flex items-center gap-1 rounded-lg border border-border-warm bg-warm-white p-1 shadow-sm opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+        <div class="absolute right-3 top-3 flex items-center gap-1 rounded-lg border border-border-warm bg-warm-white p-1 shadow-sm">
             <a href="{{ route('snippets.edit', $snippet->alias) }}"
                onclick="event.preventDefault(); event.stopPropagation();"
                x-on:click.prevent="$dispatch('open-edit-modal', '{{ $snippet->alias }}')"

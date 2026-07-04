@@ -41,7 +41,7 @@
                         return $s->expires_at && $s->expires_at->isFuture() && $s->expires_at->diffInHours(now()) < 48;
                     })->count();
                 @endphp
-                <div class="flex items-center gap-3 text-sm">
+                <div class="flex flex-wrap items-center gap-3 text-sm">
                     <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
                         <span class="font-display font-bold text-ink">{{ $activeCount }}</span>
                         <span class="text-graphite">activos</span>
@@ -60,7 +60,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             <span class="font-display font-bold text-amber">{{ $expiringSoon }}</span>
-                            <span class="text-graphite">vence pronto</span>
+                            <span class="whitespace-nowrap text-graphite">vence pronto</span>
                         </div>
                     @endif
                 </div>
