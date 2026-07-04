@@ -2,7 +2,7 @@
 
 ## Descripción
 
-**Cortito** es una webapp tipo pastebin para compartir snippets de código y texto. El nombre es un juego de palabras: "corto" en español + el dominio `.ar` (cortito.ar).
+**Cortito** es una webapp tipo pastebin para compartir snippets de código y texto, con soporte para acortar URLs. El nombre es un juego de palabras: "corto" en español + el dominio `.ar` (cortito.ar).
 
 ## Stack Tecnológico
 
@@ -23,7 +23,7 @@ owner_token     - varchar(64) (nullable, index) -- Hash SHA-256 del token
 alias           - varchar(50) (unique) -- Ej: arbol.caoba.tornillo
 title           - varchar (nullable)
 content         - longText
-content_type    - enum('code', 'text', 'markdown', 'html') -- default: 'text'
+content_type    - enum('text', 'url') -- default: 'text'
 language        - varchar(50) (nullable) -- Para syntax highlighting
 is_public       - boolean (default: true)
 password        - varchar (nullable) -- Hash bcrypt
@@ -47,7 +47,7 @@ updated_at      - timestamp
 | Aspecto | Anónimo (Gratis) | Logueado (Premium) |
 |---------|------------------|---------------------|
 | TTL | 24h fijo | 7d / 30d / 90d / 1 año / nunca |
-| Contenido | Code, text | Code, text, markdown, html |
+| Contenido | Text, URL | Text, URL |
 | Tamaño máximo | ~64KB | ~1MB |
 | Contraseña | Opcional | Opcional |
 | Privacidad | Siempre público | Público o privado |

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('alias', 50)->unique();
             $table->string('title')->nullable();
             $table->longText('content');
-            $table->enum('content_type', ['code', 'text', 'markdown', 'html'])->default('text');
+            $table->enum('content_type', ['text', 'url'])->default('text');
             $table->string('language', 50)->nullable();
             $table->boolean('is_public')->default(true);
             $table->string('password')->nullable();

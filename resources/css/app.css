@@ -7,3 +7,83 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@layer utilities {
+    .line-clamp-1 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+}
+
+/* Smooth scrollbar for slide-over */
+.slide-over-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+.slide-over-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.slide-over-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #d1d5db;
+    border-radius: 3px;
+}
+.slide-over-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #9ca3af;
+}
+
+/* Pagination styling */
+.pagination nav {
+    display: flex;
+    justify-content: center;
+}
+.pagination nav .flex {
+    gap: 0.25rem;
+}
+.pagination nav a,
+.pagination nav span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    height: 2.25rem;
+    padding: 0 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+.pagination nav a {
+    color: #6b7280;
+    background: white;
+    border: 1px solid #e5e7eb;
+}
+.pagination nav a:hover {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #374151;
+}
+.pagination nav span.active {
+    color: white;
+    background: #4f46e5;
+    border: 1px solid #4f46e5;
+}
+.pagination nav span.current {
+    color: white;
+    background: #4f46e5;
+    border: 1px solid #4f46e5;
+}
+
+/* Alpine.js x-collapse transition */
+[x-collapse] {
+    overflow: hidden;
+}
+[x-collapse].collapse {
+    transition: height 0.2s ease-out;
+}

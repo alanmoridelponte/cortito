@@ -17,12 +17,14 @@ class SnippetFactory extends Factory
     {
         $aliasGenerator = app(AliasGenerator::class);
 
+        $isUrl = fake()->boolean(30);
+
         return [
             'alias' => $aliasGenerator->generate(),
             'title' => fake()->sentence(3),
-            'content' => fake()->text(500),
-            'content_type' => fake()->randomElement(['code', 'text', 'markdown', 'html']),
-            'language' => fake()->randomElement(['javascript', 'python', 'php', 'html', 'css', null]),
+            'content' => $isUrl ? fake()->url() : fake()->text(500),
+            'content_type' => $isUrl ? 'url' : 'text',
+            'language' => null,
             'is_public' => true,
             'password' => null,
             'views_count' => fake()->numberBetween(0, 1000),
@@ -38,7 +40,7 @@ class SnippetFactory extends Factory
         return $this->state(fn () => [
             'user_id' => null,
             'owner_token' => OwnerToken::hash(OwnerToken::generate()),
-            'content_type' => fake()->randomElement(['code', 'text']),
+            'content_type' => fake()->randomElement(['text', 'url']),
         ]);
     }
 

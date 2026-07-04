@@ -23,7 +23,7 @@
         <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm border border-gray-200">
             <h3 class="text-lg font-bold mb-2">Cookies de propiedad</h3>
             <p class="text-sm text-gray-600 mb-4">
-                Para poder editar o eliminar tus anotadores, necesitamos guardar una cookie
+                Para poder editar o eliminar tus cortitos, necesitamos guardar una cookie
                 que nos permita identificar que eres el propietario. ¿Aceptas?
             </p>
             <div class="flex gap-2">

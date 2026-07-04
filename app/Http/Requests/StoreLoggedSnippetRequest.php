@@ -32,7 +32,7 @@ class StoreLoggedSnippetRequest extends FormRequest
             ],
             'title' => ['nullable', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:1048576'],
-            'content_type' => ['required', 'in:code,text,markdown,html'],
+            'content_type' => ['required', 'in:text,url'],
             'language' => ['nullable', 'string', 'max:50'],
             'is_public' => ['nullable', 'boolean'],
             'password' => ['nullable', 'string', 'min:4', 'max:255'],
@@ -44,7 +44,7 @@ class StoreLoggedSnippetRequest extends FormRequest
     {
         return [
             'alias.regex' => 'El alias solo puede contener minúsculas, números, puntos y guiones.',
-            'content.required' => 'El contenido del snippet es obligatorio.',
+            'content.required' => 'El contenido de la nota es obligatorio.',
             'content.max' => 'El contenido no puede exceder los 1MB.',
             'content_type.in' => 'Tipo de contenido no válido.',
             'ttl.in' => 'Opción de expiración no válida.',

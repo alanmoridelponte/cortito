@@ -66,7 +66,7 @@ class SnippetController extends Controller
 
             if ($count >= self::ANONYMOUS_SNIPPET_LIMIT) {
                 throw ValidationException::withMessages([
-                    'content' => 'Alcanzaste el límite de '.self::ANONYMOUS_SNIPPET_LIMIT.' anotadores gratuitos. Registrate para crear ilimitados.',
+                    'content' => 'Alcanzaste el límite de '.self::ANONYMOUS_SNIPPET_LIMIT.' cortitos gratuitos. Registrate para crear ilimitados.',
                 ]);
             }
 
@@ -77,7 +77,11 @@ class SnippetController extends Controller
 
         $snippet = Snippet::create($validated);
 
-        $response = Redirect::route('snippets.show', $snippet->alias);
+        $redirectTo = $snippet->content_type === 'url'
+            ? route('home')
+            : route('snippets.show', $snippet->alias);
+
+        $response = Redirect::to($redirectTo);
 
         if ($token) {
             $response = OwnerToken::setCookie($response, $token);
@@ -91,13 +95,13 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este anotador ha expirado.');
+            abort(410, 'Este cortito ha expirado.');
         }
 
         if ($snippet->isProtected()) {
             if (request()->isMethod('post')) {
                 if ($snippet->verifyPassword(request()->input('password', ''))) {
-                    return view('snippets.show', ['snippet' => $snippet, 'unlocked' => true]);
+                    return $this->resolveShowResponse($snippet);
                 }
 
                 throw ValidationException::withMessages([
@@ -108,7 +112,16 @@ class SnippetController extends Controller
             return view('snippets.show', ['snippet' => $snippet, 'unlocked' => false]);
         }
 
+        return $this->resolveShowResponse($snippet);
+    }
+
+    private function resolveShowResponse(Snippet $snippet)
+    {
         $snippet->increment('views_count');
+
+        if ($snippet->content_type === 'url') {
+            return redirect()->to($snippet->content, 302);
+        }
 
         return view('snippets.show', ['snippet' => $snippet, 'unlocked' => true]);
     }
@@ -118,33 +131,28 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy(request())) {
-            abort(403, 'No tenés permiso para editar este anotador.');
+            abort(403, 'No tenés permiso para editar este cortito.');
         }
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este anotador ha expirado.');
+            abort(410, 'Este cortito ha expirado.');
         }
 
-        $data = [
-            'snippet' => $snippet,
-            'contentTypes' => $this->contentTypesForUser(),
-        ];
-
-        if (auth()->check()) {
-            $data['snippets'] = Snippet::where('user_id', auth()->id())
-                ->orderByDesc('created_at')
-                ->paginate(20);
-        } else {
-            $hash = OwnerToken::getHashFromRequest(request());
-            $data['anonymousCount'] = $hash
-                ? Snippet::where('owner_token', $hash)->whereNull('user_id')->count()
-                : 0;
-            $data['anonymousLimit'] = self::ANONYMOUS_SNIPPET_LIMIT;
-
-            $data['snippets'] = OwnerToken::getSnippetsForRequest(request());
-        }
-
-        return view('snippets.edit', $data);
+        return response()->json([
+            'content' => $snippet->content,
+            'content_type' => $snippet->content_type,
+            'language' => $snippet->language,
+            'title' => $snippet->title,
+            'ttl' => $snippet->expires_at
+                ? match (true) {
+                    $snippet->expires_at->diffInDays(now()) <= 7 => '7d',
+                    $snippet->expires_at->diffInDays(now()) <= 30 => '30d',
+                    $snippet->expires_at->diffInDays(now()) <= 90 => '90d',
+                    default => '1y',
+                }
+                : 'never',
+            'is_public' => $snippet->is_public,
+        ]);
     }
 
     public function update(Request $request, string $alias)
@@ -152,11 +160,11 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy($request)) {
-            abort(403, 'No tenés permiso para editar este anotador.');
+            abort(403, 'No tenés permiso para editar este cortito.');
         }
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este anotador ha expirado.');
+            abort(410, 'Este cortito ha expirado.');
         }
 
         $validated = $this->validateSnippet($request, $snippet->id);
@@ -177,7 +185,7 @@ class SnippetController extends Controller
         $snippet->markAsEdited();
 
         return redirect()->route('snippets.show', $snippet->alias)
-            ->with('success', 'Anotador actualizado correctamente.');
+            ->with('success', 'Cortito actualizado correctamente.');
     }
 
     public function destroy(Request $request, string $alias)
@@ -185,13 +193,13 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy($request)) {
-            abort(403, 'No tenés permiso para eliminar este anotador.');
+            abort(403, 'No tenés permiso para eliminar este cortito.');
         }
 
         $snippet->delete();
 
         return redirect()->route('home')
-            ->with('success', 'Anotador eliminado correctamente.');
+            ->with('success', 'Cortito eliminado correctamente.');
     }
 
     public function reroll(): JsonResponse
@@ -229,7 +237,7 @@ class SnippetController extends Controller
             ],
             'title' => ['nullable', 'string', 'max:255'],
             'content' => ['required', 'string', 'max:'.(auth()->check() ? '1048576' : '65535')],
-            'content_type' => ['required', 'in:'.(auth()->check() ? 'code,text,markdown,html' : 'code,text')],
+            'content_type' => ['required', 'in:text,url'],
             'language' => ['nullable', 'string', 'max:50'],
         ];
 
@@ -244,9 +252,7 @@ class SnippetController extends Controller
 
     private function contentTypesForUser(): array
     {
-        return auth()->check()
-            ? ['code' => 'Código', 'text' => 'Texto', 'markdown' => 'Markdown', 'html' => 'HTML']
-            : ['code' => 'Código', 'text' => 'Texto'];
+        return ['text' => 'Texto', 'url' => 'Acortador'];
     }
 
     private function resolveExpiresAt(?string $ttl)

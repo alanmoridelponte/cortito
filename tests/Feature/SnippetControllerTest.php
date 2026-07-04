@@ -9,7 +9,7 @@ test('home page shows form with generated alias', function () {
 
     $response->assertStatus(200);
     $response->assertSee('cortito');
-    $response->assertSee('Crear anotador');
+    $response->assertSee('Crear cortito');
 });
 
 test('reroll endpoint returns new alias', function () {
@@ -39,7 +39,7 @@ test('check alias returns unavailable when taken', function () {
 });
 
 test('check alias returns invalid format for bad format', function () {
-    $response = $this->getJson('/snippets/check-alias/bad-format');
+    $response = $this->getJson('/snippets/check-alias/BAD FORMAT!');
 
     $response->assertStatus(200);
     $response->assertJson(['available' => false, 'reason' => 'invalid_format']);
@@ -148,8 +148,8 @@ test('home page shows snippets list for guest', function () {
     $response = $this->get('/');
 
     $response->assertStatus(200);
-    $response->assertSee('Mis anotadores');
-    $response->assertSee('Crear anotador');
+    $response->assertSee('Mis cortitos');
+    $response->assertSee('Crear cortito');
 });
 
 test('anonymous snippets are listed on home with owner cookie', function () {
@@ -197,9 +197,42 @@ test('store validates content_type for anonymous', function () {
     $response->assertSessionHasErrors('content_type');
 });
 
+test('url snippet redirects to stored url', function () {
+    $alias = app(AliasGenerator::class)->generate();
+
+    Snippet::create([
+        'alias' => $alias,
+        'content' => 'https://laravel.com/docs',
+        'content_type' => 'url',
+        'is_public' => true,
+        'expires_at' => now()->addDays(7),
+    ]);
+
+    $response = $this->get("/{$alias}");
+
+    $response->assertRedirect('https://laravel.com/docs');
+});
+
+test('url snippet does not increment views count', function () {
+    $alias = app(AliasGenerator::class)->generate();
+
+    $snippet = Snippet::create([
+        'alias' => $alias,
+        'content' => 'https://example.com',
+        'content_type' => 'url',
+        'views_count' => 0,
+        'is_public' => true,
+        'expires_at' => now()->addDays(7),
+    ]);
+
+    $this->get("/{$alias}");
+
+    expect($snippet->fresh()->views_count)->toBe(0);
+});
+
 test('store validates alias format', function () {
     $response = $this->post('/snippets', [
-        'alias' => 'bad-format',
+        'alias' => 'BAD FORMAT!',
         'content' => 'test',
         'content_type' => 'text',
     ]);
