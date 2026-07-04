@@ -117,11 +117,11 @@ class SnippetController extends Controller
 
     private function resolveShowResponse(Snippet $snippet)
     {
-        $snippet->increment('views_count');
-
         if ($snippet->content_type === 'url') {
             return redirect()->to($snippet->content, 302);
         }
+
+        $snippet->increment('views_count');
 
         return view('snippets.show', ['snippet' => $snippet, 'unlocked' => true]);
     }

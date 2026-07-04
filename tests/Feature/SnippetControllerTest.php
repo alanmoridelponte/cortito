@@ -102,7 +102,7 @@ test('duplicate alias is rejected', function () {
 });
 
 test('show snippet increments views count', function () {
-    $snippet = Snippet::factory()->anonymous()->create(['views_count' => 0]);
+    $snippet = Snippet::factory()->anonymous()->create(['views_count' => 0, 'content_type' => 'text']);
 
     $this->get("/{$snippet->alias}")->assertStatus(200);
 
