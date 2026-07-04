@@ -30,7 +30,7 @@ class StoreAnonymousSnippetRequest extends FormRequest
                 },
             ],
             'title' => ['nullable', 'string', 'max:255'],
-            'content' => ['required', 'string', 'max:65535'],
+            'content' => ['required', 'string', 'max:5120'],
             'content_type' => ['required', 'in:text,url'],
             'language' => ['nullable', 'string', 'max:50'],
             'password' => ['nullable', 'string', 'min:4', 'max:255'],
@@ -43,7 +43,7 @@ class StoreAnonymousSnippetRequest extends FormRequest
         return [
             'alias.regex' => 'El alias solo puede contener minúsculas, números, puntos y guiones.',
             'content.required' => 'El contenido de la nota es obligatorio.',
-            'content.max' => 'El contenido no puede exceder los 64KB.',
+            'content.max' => 'El contenido no puede exceder los 5KB.',
             'content_type.in' => 'Las notas anónimas solo soportan código y texto.',
         ];
     }

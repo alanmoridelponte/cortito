@@ -223,7 +223,7 @@
 
 <x-snippet-modal
     :contentTypes="['text' => 'Texto', 'url' => 'Acortador']"
-    :maxChars="65536"
+    :maxChars="5120"
     :anonymousCount="0"
     :anonymousLimit="10"
 />

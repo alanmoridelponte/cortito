@@ -21,7 +21,7 @@ class SnippetController extends Controller
         $data = [
             'alias' => $alias,
             'contentTypes' => $this->contentTypesForUser(),
-            'maxChars' => auth()->check() ? 1048576 : 65535,
+            'maxChars' => auth()->check() ? 1048576 : 5120,
         ];
 
         if (auth()->check()) {
@@ -236,7 +236,7 @@ class SnippetController extends Controller
                 },
             ],
             'title' => ['nullable', 'string', 'max:255'],
-            'content' => ['required', 'string', 'max:'.(auth()->check() ? '1048576' : '65535')],
+            'content' => ['required', 'string', 'max:'.(auth()->check() ? '1048576' : '5120')],
             'content_type' => ['required', 'in:text,url'],
             'language' => ['nullable', 'string', 'max:50'],
         ];
