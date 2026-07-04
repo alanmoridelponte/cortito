@@ -200,14 +200,17 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="mb-1.5 block text-xs font-medium text-graphite">Contrasena</label>
+                                <label class="mb-1.5 block text-xs font-medium text-graphite" x-text="hasPassword ? 'Cambiar contrasena' : 'Contrasena'"></label>
                                 <input
                                     type="password"
                                     x-model="form.password"
-                                    placeholder="Minimo 4 caracteres"
+                                    :placeholder="hasPassword ? 'Dejalo vacio para mantener la actual' : 'Minimo 4 caracteres'"
                                     minlength="4"
                                     maxlength="255"
                                     class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
+                                <template x-if="isEditing && hasPassword">
+                                    <p class="mt-1.5 text-xs text-celeste">Actualmente protegido. Escribi una nueva contrasena para cambiarla.</p>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -283,6 +286,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         serverError: null,
         errors: {},
         showPremium: false,
+        hasPassword: false,
         debounceTimer: null,
         anonymousCount: anonymousCount,
         anonymousLimit: anonymousLimit,
@@ -348,6 +352,10 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                     this.form.title = data.title || '';
                     if (data.ttl) this.form.ttl = data.ttl;
                     if (data.is_public !== undefined) this.form.isPublic = data.is_public ? '1' : '0';
+                    this.hasPassword = data.has_password || false;
+                    if (this.hasPassword) {
+                        this.showPremium = true;
+                    }
                 }
             } catch {
                 this.serverError = 'No se pudo cargar el cortito.';
@@ -362,6 +370,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             this.serverError = null;
             this.errors = {};
             this.showPremium = false;
+            this.hasPassword = false;
         },
 
         close() {
@@ -450,7 +459,9 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             @auth
                 body.ttl = this.form.ttl;
                 body.is_public = this.form.isPublic === '1';
-                body.password = this.form.password || null;
+                if (this.form.password) {
+                    body.password = this.form.password;
+                }
             @endauth
 
             const url = this.isEditing
