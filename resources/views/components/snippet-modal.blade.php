@@ -19,7 +19,7 @@
 
     {{-- Slide-over panel --}}
     <div x-show="isOpen" x-cloak
-         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-3/5 lg:w-1/2"
+         class="fixed inset-y-0 right-0 z-50 flex w-full md:w-4/5 lg:w-1/2"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="translate-x-full"
          x-transition:enter-end="translate-x-0"
@@ -224,7 +224,7 @@
 
             {{-- Footer --}}
             <div class="border-t border-border-warm bg-cream/40 px-6 py-4">
-                <div class="flex items-center justify-between">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="text-xs text-graphite-light">
                         @auth
                             <span class="inline-flex items-center gap-1.5">
