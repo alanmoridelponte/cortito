@@ -129,7 +129,7 @@
         </div>
     @else
         {{-- Snippet grid --}}
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             @foreach($snippets as $snippet)
                 <div data-type="{{ $snippet->content_type }}"
                      data-title="{{ strtolower($snippet->title ?? '') }}"
