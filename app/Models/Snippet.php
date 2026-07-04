@@ -57,6 +57,14 @@ class Snippet extends Model
         return $this->expires_at !== null && $this->expires_at->isPast();
     }
 
+    public function scopeActive($query): void
+    {
+        $query->where(function ($q) {
+            $q->whereNull('expires_at')
+                ->orWhere('expires_at', '>', now());
+        });
+    }
+
     public function isAnonymous(): bool
     {
         return is_null($this->user_id);

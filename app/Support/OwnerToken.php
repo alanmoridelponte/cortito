@@ -81,6 +81,7 @@ class OwnerToken
 
         return Snippet::where('owner_token', $hash)
             ->whereNull('user_id')
+            ->active()
             ->orderByDesc('created_at')
             ->get();
     }

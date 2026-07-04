@@ -95,7 +95,7 @@
             @endif
             @if($snippet->is_edited)
                 <span class="rounded-md bg-cream-dark px-1.5 py-0.5 text-[11px] font-medium text-graphite">
-                    editado
+                    Editado
                 </span>
             @endif
             @if($snippet->isProtected())

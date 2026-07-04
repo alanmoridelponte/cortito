@@ -140,9 +140,9 @@
     left: 0;
     display: flex;
     align-items: center;
-    padding-left: 0.875rem;
+    padding-left: 0.75rem;
     font-family: 'Space Grotesk', ui-monospace, SFMono-Regular, monospace;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     color: var(--color-graphite-light);
     pointer-events: none;

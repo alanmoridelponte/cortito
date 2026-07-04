@@ -77,7 +77,7 @@
                     @endif
                     @if($snippet->is_edited)
                         <span class="rounded-md bg-cream-dark px-2 py-0.5 text-xs font-medium text-graphite">
-                            editado @if($snippet->edited_at) {{ $snippet->edited_at->diffForHumans() }} @endif
+                            Editado @if($snippet->edited_at) {{ $snippet->edited_at->diffForHumans() }} @endif
                         </span>
                     @endif
                 </div>

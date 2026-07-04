@@ -26,12 +26,13 @@ class SnippetController extends Controller
 
         if (auth()->check()) {
             $data['snippets'] = Snippet::where('user_id', auth()->id())
+                ->active()
                 ->orderByDesc('created_at')
                 ->paginate(20);
         } else {
             $hash = OwnerToken::getHashFromRequest(request());
             $data['anonymousCount'] = $hash
-                ? Snippet::where('owner_token', $hash)->whereNull('user_id')->count()
+                ? Snippet::where('owner_token', $hash)->whereNull('user_id')->active()->count()
                 : 0;
             $data['anonymousLimit'] = self::ANONYMOUS_SNIPPET_LIMIT;
 

@@ -22,14 +22,14 @@
     @if($snippets->isEmpty())
         <div class="mb-10 text-center sm:text-left">
             <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tus cortitos</h1>
-            <p class="mt-2 text-base text-graphite">Links y notas temporales, listos para compartir.</p>
+            <p class="mt-2 text-base text-graphite">Enlaces acortados y notas temporales, listos para compartir.</p>
         </div>
     @else
         <div class="mb-8">
             <div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Tus cortitos</h1>
-                    <p class="mt-1.5 text-base text-graphite">Links y notas temporales, listos para compartir.</p>
+                    <p class="mt-1.5 text-base text-graphite">Enlaces acortados y notas temporales, listos para compartir.</p>
                 </div>
 
                 {{-- Metrics --}}
