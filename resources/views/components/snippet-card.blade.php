@@ -44,7 +44,7 @@
 @endphp
 
 <div class="group relative flex flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
-     x-data="{ showDeleteConfirm: false, copied: false, copyContent: @js($snippet->content_type === 'text' ? strip_tags($snippet->content) : null) }">
+     x-data="{ showDeleteConfirm: false, copied: false }">
 
     {{-- Click area --}}
     <a href="{{ route('snippets.show', $snippet->alias) }}" @if($isUrl) target="_blank" @endif class="flex flex-1 flex-col p-5 sm:p-6">
@@ -132,7 +132,7 @@
                     class="inline-flex w-full sm:w-auto sm:shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-border-warm bg-cream-dark/70 px-3 py-1.5 font-medium transition-all text-xs duration-150 btn-press h-8 cursor-pointer"
                     :class="copied ? 'bg-mint-light text-mint border-mint/40' : 'text-graphite-light hover:text-celeste hover:bg-celeste-light/50 hover:border-celeste/30'"
                     @click="
-                        const text = copyContent || '{{ route('snippets.show', $snippet->alias) }}';
+                        const text = '{{ route('snippets.show', $snippet->alias) }}';
                         if (navigator.clipboard && navigator.clipboard.writeText) {
                             navigator.clipboard.writeText(text).then(() => { copied = true; setTimeout(() => copied = false, 2000); });
                         } else {
