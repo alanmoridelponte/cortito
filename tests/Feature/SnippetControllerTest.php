@@ -220,7 +220,7 @@ test('url snippet redirects to stored url', function () {
     $response->assertRedirect('https://laravel.com/docs');
 });
 
-test('url snippet does not increment views count', function () {
+test('url snippet increments views count', function () {
     $alias = app(AliasGenerator::class)->generate();
 
     $snippet = Snippet::create([
@@ -234,7 +234,7 @@ test('url snippet does not increment views count', function () {
 
     $this->get("/{$alias}");
 
-    expect($snippet->fresh()->views_count)->toBe(0);
+    expect($snippet->fresh()->views_count)->toBe(1);
 });
 
 test('store validates alias format', function () {

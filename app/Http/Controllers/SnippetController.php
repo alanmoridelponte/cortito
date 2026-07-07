@@ -183,19 +183,13 @@ class SnippetController extends Controller
 
     private function resolveShowResponse(Snippet $snippet)
     {
-        if ($snippet->content_type === 'url') {
-            $url = $snippet->content;
-
-            if (! filter_var($url, FILTER_VALIDATE_URL) || ! in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
-                return redirect()->route('home')->with('error', 'URL inválida.');
-            }
-
-            return redirect()->away($url, 302);
-        }
-
         dispatch(function () use ($snippet) {
             $snippet->increment('views_count');
         })->afterResponse();
+
+        if ($snippet->content_type === 'url') {
+            return redirect()->away($snippet->content, 302);
+        }
 
         return view('snippets.show', ['snippet' => $snippet, 'unlocked' => true]);
     }
@@ -331,8 +325,8 @@ class SnippetController extends Controller
 
         $rules['content'][] = function ($attribute, $value, $fail) use ($request) {
             if ($request->input('content_type') === 'url') {
-                if (! filter_var($value, FILTER_VALIDATE_URL) || ! in_array(parse_url($value, PHP_URL_SCHEME), ['http', 'https'])) {
-                    $fail('La URL debe ser una URL válida que comience con http:// o https://.');
+                if (! filter_var($value, FILTER_VALIDATE_URL)) {
+                    $fail('La URL debe ser una URL válida.');
                 }
             }
         };
