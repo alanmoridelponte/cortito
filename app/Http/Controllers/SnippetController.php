@@ -92,7 +92,9 @@ class SnippetController extends Controller
             'password_in_validated' => isset($validated['password']),
         ]);
 
-        $redirectTo = route('snippets.show', $snippet->alias);
+        $redirectTo = $snippet->content_type === 'url'
+            ? route('home')
+            : route('snippets.show', $snippet->alias);
 
         $response = Redirect::to($redirectTo);
 
@@ -220,7 +222,11 @@ class SnippetController extends Controller
         $snippet->update($validated);
         $snippet->markAsEdited();
 
-        return redirect()->route('snippets.show', $snippet->alias)
+        $redirectTo = $snippet->content_type === 'url'
+            ? route('home')
+            : route('snippets.show', $snippet->alias);
+
+        return redirect()->to($redirectTo)
             ->with('success', 'Cortito actualizado correctamente.');
     }
 

@@ -47,27 +47,7 @@
      x-data="{ showDeleteConfirm: false, copied: false, copyContent: @js($snippet->content_type === 'text' ? strip_tags($snippet->content) : null) }">
 
     {{-- Click area --}}
-    @if($isUrl)
-        <div class="flex flex-1 flex-col p-5 sm:p-6 cursor-pointer" @click="
-            const url = '{{ route('snippets.show', $snippet->alias) }}';
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(url).then(() => { copied = true; setTimeout(() => copied = false, 2000); });
-            } else {
-                const ta = document.createElement('textarea');
-                ta.value = url;
-                ta.style.position = 'fixed';
-                ta.style.left = '-9999px';
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                copied = true;
-                setTimeout(() => copied = false, 2000);
-            }
-        ">
-    @else
-        <a href="{{ route('snippets.show', $snippet->alias) }}" class="flex flex-1 flex-col p-5 sm:p-6">
-    @endif
+    <a href="{{ route('snippets.show', $snippet->alias) }}" @if($isUrl) target="_blank" @endif class="flex flex-1 flex-col p-5 sm:p-6">
 
         {{-- Top: type indicator + badges --}}
         <div class="mb-4 flex items-center gap-x-2 gap-y-1.5 flex-wrap">
@@ -119,11 +99,7 @@
             <div class="mb-5 flex-1"></div>
         @endif
 
-    @if($isUrl)
-        </div>
-    @else
-        </a>
-    @endif
+    </a>
 
     {{-- Footer --}}
     <div class="flex items-center border-t border-border-light bg-cream/40 px-5 py-3 sm:py-3.5">
