@@ -101,9 +101,7 @@
                 <svg class="h-5 w-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                 </svg>
-                Alcanzaste el limite de {{ $anonymousLimit }} cortitos gratuitos.
-                <a href="#" class="font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">Registrate</a> para crear ilimitados.
-            </div>
+                Alcanzaste el limite de {{ $anonymousLimit }} cortitos gratuitos. Eliminá algunos o esperá que se vencen y volvé a intentar.</div>
         </div>
     @endif
 

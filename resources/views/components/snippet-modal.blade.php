@@ -48,8 +48,7 @@
                 {{-- Anonymous limit warning --}}
                 <template x-if="!isEditing && atLimit">
                     <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
-                        Alcanzaste el limite de <span x-text="anonymousLimit"></span> cortitos gratuitos.
-                        <a href="#" class="font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">Registrate</a> para crear ilimitados.
+                        Alcanzaste el limite de <span x-text="anonymousLimit"></span> cortitos gratuitos. Eliminá algunos o esperá que se vencen y volvé a intentar.
                     </div>
                 </template>
 
@@ -566,7 +565,12 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
                 }
 
                 if (!res.ok) {
+                    if (res.status === 429) {
+                    this.notify('error', 'Has hecho demasiadas solicitudes. Por favor, intenta de nuevo más tarde.');
+                    }
+                    else {
                     this.notify('error', 'Ocurrio un error inesperado. Intenta de nuevo.');
+                    }
                 }
             } catch {
                 this.notify('error', 'No se pudo conectar al servidor. Intenta de nuevo.');
