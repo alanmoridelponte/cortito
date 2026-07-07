@@ -92,9 +92,7 @@ class SnippetController extends Controller
             'password_in_validated' => isset($validated['password']),
         ]);
 
-        $redirectTo = $snippet->content_type === 'url'
-            ? route('home')
-            : route('snippets.show', $snippet->alias);
+        $redirectTo = route('snippets.show', $snippet->alias);
 
         $response = Redirect::to($redirectTo);
 
