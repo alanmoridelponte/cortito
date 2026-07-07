@@ -49,8 +49,21 @@ class OwnerToken
      * Obtiene el token hasheado desde la cookie del request.
      * Retorna null si no existe la cookie.
      */
+    public static function getHashFromSession(Request $request): ?string
+    {
+        $hash = $request->session()->get('owner_token_hash');
+
+        return filled($hash) ? $hash : null;
+    }
+
     public static function getHashFromRequest(Request $request): ?string
     {
+        $hash = self::getHashFromSession($request);
+
+        if ($hash !== null) {
+            return $hash;
+        }
+
         $token = $request->cookie(self::COOKIE_NAME);
 
         if (empty($token)) {

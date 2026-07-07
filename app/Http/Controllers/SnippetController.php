@@ -7,6 +7,8 @@ use App\Support\AliasGenerator;
 use App\Support\OwnerToken;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 
@@ -60,7 +62,12 @@ class SnippetController extends Controller
             $validated['user_id'] = auth()->id();
             $validated['is_public'] = $request->boolean('is_public', true);
         } else {
-            if (OwnerToken::hasCookie($request)) {
+            $sessionHash = OwnerToken::getHashFromSession($request);
+
+            if ($sessionHash !== null) {
+                $tokenHash = $sessionHash;
+                $token = null;
+            } elseif (OwnerToken::hasCookie($request)) {
                 $tokenHash = OwnerToken::getHashFromRequest($request);
                 $token = null;
             } else {
@@ -68,22 +75,44 @@ class SnippetController extends Controller
                 $tokenHash = OwnerToken::hash($token);
             }
 
-            $count = Snippet::where('owner_token', $tokenHash)
+            $ipCount = Snippet::where('ip_address', $request->ip())
                 ->whereNull('user_id')
                 ->count();
 
-            if ($count >= self::ANONYMOUS_SNIPPET_LIMIT) {
+            if ($ipCount >= 50) {
                 throw ValidationException::withMessages([
-                    'content' => 'Alcanzaste el límite de '.self::ANONYMOUS_SNIPPET_LIMIT.' cortitos gratuitos. Registrate para crear ilimitados.',
+                    'content' => 'Alcanzaste el límite de 50 cortitos por IP. Registrate para crear ilimitados.',
                 ]);
             }
 
+            $validated['ip_address'] = $request->ip();
             $validated['expires_at'] = now()->addHours(24);
             $validated['is_public'] = true;
             $validated['owner_token'] = $tokenHash;
+
+            $snippet = DB::transaction(function () use ($tokenHash, $validated) {
+                $count = Snippet::where('owner_token', $tokenHash)
+                    ->whereNull('user_id')
+                    ->lockForUpdate()
+                    ->count();
+
+                if ($count >= self::ANONYMOUS_SNIPPET_LIMIT) {
+                    throw ValidationException::withMessages([
+                        'content' => 'Alcanzaste el límite de '.self::ANONYMOUS_SNIPPET_LIMIT.' cortitos gratuitos. Registrate para crear ilimitados.',
+                    ]);
+                }
+
+                return Snippet::create($validated);
+            });
+
+            if ($sessionHash === null) {
+                $request->session()->put('owner_token_hash', $tokenHash);
+            }
         }
 
-        $snippet = Snippet::create($validated);
+        if (! isset($snippet)) {
+            $snippet = Snippet::create($validated);
+        }
 
         \Log::info('Snippet created', [
             'alias' => $snippet->alias,
@@ -122,18 +151,23 @@ class SnippetController extends Controller
 
         if ($snippet->isProtected()) {
             if (request()->isMethod('post')) {
+                $cacheKey = 'password_attempts:'.$snippet->id.':'.request()->ip();
+                $attempts = (int) Cache::get($cacheKey, 0);
+
+                if ($attempts >= 5) {
+                    abort(429, 'Demasiados intentos de contraseña. Intentalo de nuevo en 15 minutos.');
+                }
+
                 $passwordInput = request()->input('password', '');
                 $verified = $snippet->verifyPassword($passwordInput);
 
-                \Log::info('Password verification', [
-                    'alias' => $snippet->alias,
-                    'input_empty' => empty($passwordInput),
-                    'verified' => $verified,
-                ]);
-
                 if ($verified) {
+                    Cache::forget($cacheKey);
+
                     return $this->resolveShowResponse($snippet);
                 }
+
+                Cache::put($cacheKey, $attempts + 1, now()->addMinutes(15));
 
                 throw ValidationException::withMessages([
                     'password' => 'La contraseña es incorrecta.',
@@ -149,10 +183,18 @@ class SnippetController extends Controller
     private function resolveShowResponse(Snippet $snippet)
     {
         if ($snippet->content_type === 'url') {
-            return redirect()->to($snippet->content, 302);
+            $url = $snippet->content;
+
+            if (! filter_var($url, FILTER_VALIDATE_URL) || ! in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
+                abort(400, 'URL inválida.');
+            }
+
+            return redirect()->away($url, 302);
         }
 
-        $snippet->increment('views_count');
+        dispatch(function () use ($snippet) {
+            $snippet->increment('views_count');
+        })->afterResponse();
 
         return view('snippets.show', ['snippet' => $snippet, 'unlocked' => true]);
     }
@@ -283,6 +325,14 @@ class SnippetController extends Controller
             'language' => ['nullable', 'string', 'max:50'],
             'password' => ['nullable', 'string', 'min:4', 'max:255'],
         ];
+
+        $rules['content'][] = function ($attribute, $value, $fail) use ($request) {
+            if ($request->input('content_type') === 'url') {
+                if (! filter_var($value, FILTER_VALIDATE_URL) || ! in_array(parse_url($value, PHP_URL_SCHEME), ['http', 'https'])) {
+                    $fail('La URL debe ser una URL válida que comience con http:// o https://.');
+                }
+            }
+        };
 
         if (auth()->check()) {
             $rules['ttl'] = ['nullable', 'in:7d,30d,90d,1y,never'];

@@ -17,9 +17,19 @@ Route::get('/snippets/check-alias/{alias}', [SnippetController::class, 'checkAli
     ->middleware('throttle:alias-check')
     ->name('snippets.check-alias');
 
-Route::get('/{alias}/edit', [SnippetController::class, 'edit'])->name('snippets.edit');
-Route::put('/{alias}', [SnippetController::class, 'update'])->name('snippets.update');
-Route::delete('/{alias}', [SnippetController::class, 'destroy'])->name('snippets.destroy');
+Route::get('/{alias}/edit', [SnippetController::class, 'edit'])
+    ->middleware('throttle:snippet-edit')
+    ->name('snippets.edit');
+Route::put('/{alias}', [SnippetController::class, 'update'])
+    ->middleware('throttle:snippet-edit')
+    ->name('snippets.update');
+Route::delete('/{alias}', [SnippetController::class, 'destroy'])
+    ->middleware('throttle:snippet-delete')
+    ->name('snippets.destroy');
 
-Route::get('/{alias}', [SnippetController::class, 'show'])->name('snippets.show');
-Route::post('/{alias}', [SnippetController::class, 'show'])->name('snippets.show.password');
+Route::get('/{alias}', [SnippetController::class, 'show'])
+    ->middleware('throttle:snippet-view')
+    ->name('snippets.show');
+Route::post('/{alias}', [SnippetController::class, 'show'])
+    ->middleware('throttle:password-check')
+    ->name('snippets.show.password');

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
-#[Fillable(['alias', 'title', 'content', 'content_type', 'language', 'is_public', 'password', 'expires_at', 'is_edited', 'edited_at', 'owner_token'])]
+#[Fillable(['alias', 'title', 'content', 'content_type', 'language', 'is_public', 'password', 'expires_at', 'is_edited', 'edited_at', 'owner_token', 'ip_address'])]
 #[Hidden(['password', 'owner_token'])]
 class Snippet extends Model
 {

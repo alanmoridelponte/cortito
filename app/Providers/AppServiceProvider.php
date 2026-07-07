@@ -24,6 +24,14 @@ class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('alias-check', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
 
-        RateLimiter::for('snippet-create', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('snippet-create', fn (Request $request) => auth()->check()
+                ? Limit::perMinute(30)->by($request->user()?->id ?? $request->ip())
+                : Limit::perMinute(3)->by($request->ip())
+        );
+
+        RateLimiter::for('snippet-view', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+        RateLimiter::for('snippet-edit', fn (Request $request) => Limit::perMinute(30)->by($request->ip()));
+        RateLimiter::for('snippet-delete', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('password-check', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
     }
 }
