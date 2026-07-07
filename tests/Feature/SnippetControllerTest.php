@@ -52,6 +52,7 @@ test('anonymous user can create snippet', function () {
         'alias' => $alias,
         'content' => 'Hello from anonymous',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $response->assertRedirect();
@@ -69,6 +70,7 @@ test('anonymous snippet forces is_public true', function () {
         'alias' => $alias,
         'content' => 'Public only',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $snippet = Snippet::where('alias', $alias)->first();
@@ -82,6 +84,7 @@ test('anonymous snippet expires in 24 hours', function () {
         'alias' => $alias,
         'content' => 'Expiring soon',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $snippet = Snippet::where('alias', $alias)->first();
@@ -96,6 +99,7 @@ test('duplicate alias is rejected', function () {
         'alias' => 'duplicate.existing.alias',
         'content' => 'Should fail',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $response->assertSessionHasErrors('alias');
@@ -180,6 +184,7 @@ test('store validates content is required', function () {
     $response = $this->post('/snippets', [
         'content' => '',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $response->assertSessionHasErrors('content');
@@ -192,6 +197,7 @@ test('store validates content_type for anonymous', function () {
         'alias' => $alias,
         'content' => 'test',
         'content_type' => 'markdown',
+        'cookie_consent_accepted' => true,
     ]);
 
     $response->assertSessionHasErrors('content_type');
@@ -235,6 +241,7 @@ test('store validates alias format', function () {
         'alias' => 'BAD FORMAT!',
         'content' => 'test',
         'content_type' => 'text',
+        'cookie_consent_accepted' => true,
     ]);
 
     $response->assertSessionHasErrors('alias');

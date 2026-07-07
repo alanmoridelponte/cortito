@@ -169,6 +169,8 @@
     :maxChars="$maxChars"
     :anonymousCount="$anonymousCount ?? 0"
     :anonymousLimit="$anonymousLimit ?? 10"
+    :isAuthenticated="auth()->check()"
+    :hasOwnerCookie="$hasOwnerCookie ?? false"
 />
 
 <script>

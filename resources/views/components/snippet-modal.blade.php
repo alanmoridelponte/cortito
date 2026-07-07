@@ -1,8 +1,9 @@
-@props(['contentTypes', 'maxChars', 'alias' => null, 'anonymousCount' => 0, 'anonymousLimit' => 10])
+@props(['contentTypes', 'maxChars', 'alias' => null, 'anonymousCount' => 0, 'anonymousLimit' => 10, 'isAuthenticated' => false, 'hasOwnerCookie' => false])
 
-<div x-data="snippetModal({{ json_encode($contentTypes) }}, {{ $maxChars }}, {{ $anonymousCount }}, {{ $anonymousLimit }})"
+<div x-data="snippetModal({{ json_encode($contentTypes) }}, {{ $maxChars }}, {{ $anonymousCount }}, {{ $anonymousLimit }}, {{ $isAuthenticated ? 'true' : 'false' }}, {{ $hasOwnerCookie ? 'true' : 'false' }})"
      x-on:open-create-modal.window="openCreate()"
      x-on:open-edit-modal.window="openEdit($event.detail)"
+     x-on:cookies-accepted.window="consentGiven = true"
      @keydown.escape.window="close()">
 
     {{-- Overlay --}}
@@ -49,6 +50,25 @@
                     <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
                         Alcanzaste el limite de <span x-text="anonymousLimit"></span> cortitos gratuitos.
                         <a href="#" class="font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">Registrate</a> para crear ilimitados.
+                    </div>
+                </template>
+
+                {{-- Cookie consent warning --}}
+                <template x-if="!isEditing && !isAuthenticated && !consentGiven">
+                    <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
+                        <span>Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.</span>
+                        <button type="button" @click="window.dispatchEvent(new CustomEvent('open-cookie-consent'))"
+                                class="ml-1 inline-flex items-center gap-1.5 font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">
+                            <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
+                                <path d="M8.5 8.5v.01"/>
+                                <path d="M16 15.5v.01"/>
+                                <path d="M12 12v.01"/>
+                                <path d="M11 17v.01"/>
+                                <path d="M7 14v.01"/>
+                            </svg>
+                            Hacé click acá
+                        </button>
                     </div>
                 </template>
 
@@ -280,7 +300,7 @@
                         <button
                             type="button"
                             @click="submit()"
-                            :disabled="submitting || (!isEditing && (atLimit || !form.content.trim() || aliasAvailable !== true || aliasChecking || form.alias.length < 5 || !/^[a-z0-9][a-z0-9.\-]*$/.test(form.alias))) || (isEditing && !form.content.trim()) || (form.contentType === 'url' && !isValidUrl(form.content))"
+                            :disabled="submitting || (!isEditing && (atLimit || (!isAuthenticated && !consentGiven) || !form.content.trim() || aliasAvailable !== true || aliasChecking || form.alias.length < 5 || !/^[a-z0-9][a-z0-9.\-]*$/.test(form.alias))) || (isEditing && !form.content.trim()) || (form.contentType === 'url' && !isValidUrl(form.content))"
                             class="btn-press inline-flex items-center gap-2 rounded-lg bg-sol px-5 py-2.5 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all duration-150 hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25 focus:outline-none focus-ring-celeste disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none">
                             <svg x-show="submitting" class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
@@ -298,11 +318,14 @@
 </div>
 
 <script>
-function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
+function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, isAuthenticated, hasOwnerCookie) {
     return {
         isOpen: false,
         isEditing: false,
         editAlias: null,
+        isAuthenticated: isAuthenticated,
+        hasOwnerCookie: hasOwnerCookie,
+        consentGiven: localStorage.getItem('cortito_cookie_consent') === 'accepted' || hasOwnerCookie,
         form: {
             alias: '',
             content: '',
@@ -349,6 +372,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         async openCreate() {
             this.isEditing = false;
             this.editAlias = null;
+            this.consentGiven = localStorage.getItem('cortito_cookie_consent') === 'accepted' || this.hasOwnerCookie;
             this.resetForm();
             try {
                 const res = await fetch('{{ route("snippets.reroll") }}', {
@@ -464,6 +488,12 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                 return;
             }
 
+            if (!this.isEditing && !this.isAuthenticated && !this.consentGiven) {
+                this.serverError = 'Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.';
+                this.submitting = false;
+                return;
+            }
+
             if (!this.isEditing) {
                 if (this.form.alias.length < 5) {
                     this.errors = { alias: ['El alias debe tener al menos 5 caracteres.'] };
@@ -487,6 +517,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                 content: this.form.content,
                 content_type: this.form.contentType,
                 title: this.form.title || null,
+                cookie_consent_accepted: this.consentGiven,
             };
 
             if (this.form.password && !this.removePassword) {

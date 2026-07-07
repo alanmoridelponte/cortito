@@ -35,6 +35,7 @@ class SnippetController extends Controller
                 ? Snippet::where('owner_token', $hash)->whereNull('user_id')->active()->count()
                 : 0;
             $data['anonymousLimit'] = self::ANONYMOUS_SNIPPET_LIMIT;
+            $data['hasOwnerCookie'] = OwnerToken::hasCookie(request());
 
             $data['snippets'] = OwnerToken::getSnippetsForRequest(request());
         }
@@ -44,6 +45,12 @@ class SnippetController extends Controller
 
     public function store(Request $request)
     {
+        if (! $request->user() && ! $request->boolean('cookie_consent_accepted') && ! OwnerToken::hasCookie($request)) {
+            throw ValidationException::withMessages([
+                'cookie_consent' => 'Debés aceptar las cookies de propiedad para crear cortitos.',
+            ]);
+        }
+
         $validated = $this->validateSnippet($request);
 
         $token = null;

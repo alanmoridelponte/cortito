@@ -1,4 +1,5 @@
-<div x-data="cookieConsent()">
+<div x-data="cookieConsent()"
+     x-on:open-cookie-consent.window="resetConsent()">
     {{-- Botón flotante para re-mostrar el banner cuando fue rechazado --}}
     <button
         x-show="hasConsent && wasDeclined"
@@ -52,6 +53,7 @@ function cookieConsent() {
             document.cookie = 'cortito_cookie_consent=accepted; path=/; max-age=31536000; SameSite=Lax';
             this.hasConsent = true;
             this.wasDeclined = false;
+            window.dispatchEvent(new CustomEvent('cookies-accepted'));
         },
 
         decline() {
