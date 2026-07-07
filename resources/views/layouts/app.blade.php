@@ -25,17 +25,6 @@
         </div>
     </header>
 
-    @if(session('success'))
-        <div class="mx-auto max-w-6xl px-5 pt-4 sm:px-6">
-            <div class="flex items-center gap-2.5 rounded-lg border border-mint/30 bg-mint-surface px-4 py-3 text-sm font-medium text-mint">
-                <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-                </svg>
-                {{ session('success') }}
-            </div>
-        </div>
-    @endif
-
     <main class="mx-auto max-w-6xl px-5 py-8 sm:px-6 sm:py-10">
         @yield('content')
     </main>
@@ -45,6 +34,8 @@
     </footer>
 
     <x-cookie-consent />
+
+    <x-notification-modal />
 
     @stack('scripts')
 </body>

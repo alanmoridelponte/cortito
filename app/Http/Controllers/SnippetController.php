@@ -93,6 +93,7 @@ class SnippetController extends Controller
             $snippet = DB::transaction(function () use ($tokenHash, $validated) {
                 $count = Snippet::where('owner_token', $tokenHash)
                     ->whereNull('user_id')
+                    ->active()
                     ->lockForUpdate()
                     ->count();
 
@@ -146,7 +147,7 @@ class SnippetController extends Controller
         ]);
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este cortito ha expirado.');
+            return redirect()->route('home')->with('error', 'Este cortito ha expirado.');
         }
 
         if ($snippet->isProtected()) {
@@ -186,7 +187,7 @@ class SnippetController extends Controller
             $url = $snippet->content;
 
             if (! filter_var($url, FILTER_VALIDATE_URL) || ! in_array(parse_url($url, PHP_URL_SCHEME), ['http', 'https'])) {
-                abort(400, 'URL inválida.');
+                return redirect()->route('home')->with('error', 'URL inválida.');
             }
 
             return redirect()->away($url, 302);
@@ -204,11 +205,11 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy(request())) {
-            abort(403, 'No tenés permiso para editar este cortito.');
+            return response()->json(['error' => 'No tenés permiso para editar este cortito.'], 403);
         }
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este cortito ha expirado.');
+            return response()->json(['error' => 'Este cortito ha expirado.'], 410);
         }
 
         return response()->json([
@@ -234,11 +235,13 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy($request)) {
-            abort(403, 'No tenés permiso para editar este cortito.');
+            $redirectTo = $snippet->content_type === 'url' ? route('home') : route('snippets.show', $snippet->alias);
+
+            return redirect()->to($redirectTo)->with('error', 'No tenés permiso para editar este cortito.');
         }
 
         if ($snippet->isExpired()) {
-            abort(410, 'Este cortito ha expirado.');
+            return redirect()->route('home')->with('error', 'Este cortito ha expirado.');
         }
 
         $validated = $this->validateSnippet($request, $snippet->id);
@@ -277,7 +280,7 @@ class SnippetController extends Controller
         $snippet = Snippet::where('alias', $alias)->firstOrFail();
 
         if (! $snippet->canBeEditedBy($request)) {
-            abort(403, 'No tenés permiso para eliminar este cortito.');
+            return redirect()->route('home')->with('error', 'No tenés permiso para eliminar este cortito.');
         }
 
         $snippet->delete();

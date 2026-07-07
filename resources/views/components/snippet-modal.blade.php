@@ -270,10 +270,7 @@
                     </div>
                 @endauth
 
-                {{-- Server error --}}
-                <template x-if="serverError">
-                    <div class="mt-5 rounded-lg border border-danger/30 bg-danger-light p-3.5 text-sm font-medium text-danger" x-text="serverError"></div>
-                </template>
+
             </div>
 
             {{-- Footer --}}
@@ -340,7 +337,6 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
         aliasAvailable: null,
         rerolling: false,
         submitting: false,
-        serverError: null,
         errors: {},
         showPremium: false,
         hasPassword: false,
@@ -414,8 +410,14 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
                     this.hasPassword = data.has_password || false;
                 }
             } catch {
-                this.serverError = 'No se pudo cargar el cortito.';
+                this.close();
+                window.dispatchEvent(new CustomEvent('notify', { detail: { type: 'error', message: 'No se pudo cargar el cortito.' } }));
             }
+        },
+
+        notify(type, message) {
+            this.close();
+            window.dispatchEvent(new CustomEvent('notify', { detail: { type, message } }));
         },
 
         resetForm() {
@@ -423,7 +425,6 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
             this.aliasChecking = false;
             this.aliasAvailable = null;
             this.submitting = false;
-            this.serverError = null;
             this.errors = {};
             this.showPremium = false;
             this.hasPassword = false;
@@ -479,18 +480,17 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
 
         async submit() {
             this.submitting = true;
-            this.serverError = null;
             this.errors = {};
 
             if (!this.isEditing && this.atLimit) {
-                this.serverError = 'Alcanzaste el limite de cortitos gratuitos. Registrate para crear ilimitados.';
                 this.submitting = false;
+                this.notify('error', 'Alcanzaste el limite de cortitos gratuitos. Registrate para crear ilimitados.');
                 return;
             }
 
             if (!this.isEditing && !this.isAuthenticated && !this.consentGiven) {
-                this.serverError = 'Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.';
                 this.submitting = false;
+                this.notify('error', 'Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.');
                 return;
             }
 
@@ -566,10 +566,10 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
                 }
 
                 if (!res.ok) {
-                    this.serverError = 'Ocurrio un error inesperado. Intenta de nuevo.';
+                    this.notify('error', 'Ocurrio un error inesperado. Intenta de nuevo.');
                 }
             } catch {
-                this.serverError = 'No se pudo conectar al servidor. Intenta de nuevo.';
+                this.notify('error', 'No se pudo conectar al servidor. Intenta de nuevo.');
             } finally {
                 this.submitting = false;
             }

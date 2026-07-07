@@ -113,12 +113,13 @@ test('show snippet increments views count', function () {
     expect($snippet->fresh()->views_count)->toBe(1);
 });
 
-test('expired snippet returns 410', function () {
+test('expired snippet redirects to home with error', function () {
     $snippet = Snippet::factory()->expired()->create();
 
     $response = $this->get("/{$snippet->alias}");
 
-    $response->assertStatus(410);
+    $response->assertRedirectToRoute('home');
+    $response->assertSessionHas('error', 'Este cortito ha expirado.');
 });
 
 test('protected snippet shows password form', function () {
