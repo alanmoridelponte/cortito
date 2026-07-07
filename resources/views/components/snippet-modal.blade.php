@@ -55,10 +55,10 @@
 
                 {{-- Cookie consent warning --}}
                 <template x-if="!isEditing && !isAuthenticated && !consentGiven">
-                    <div class="mb-5 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
-                        <span>Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.</span>
+                    <div class="mb-5 flex flex-wrap items-center gap-x-1 rounded-lg border border-amber/20 bg-amber-light p-3.5 text-sm text-amber">
+                        <span>Necesitás aceptar las cookies de propiedad para poder crear y guardar cortitos.</span>&nbsp;&nbsp;&nbsp;
                         <button type="button" @click="window.dispatchEvent(new CustomEvent('open-cookie-consent'))"
-                                class="ml-1 inline-flex items-center gap-1.5 font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber">
+                                class="inline-flex items-center gap-1.5 font-semibold underline decoration-amber/40 underline-offset-2 hover:text-amber hover:decoration-amber cursor-pointer">
                             <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"/>
                                 <path d="M8.5 8.5v.01"/>
