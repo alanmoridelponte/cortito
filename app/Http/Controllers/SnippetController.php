@@ -295,7 +295,7 @@ class SnippetController extends Controller
 
     private function contentTypesForUser(): array
     {
-        return ['url' => 'Enlace Acortador', 'text' => 'Texto'];
+        return ['url' => 'Enlace Acortado', 'text' => 'Texto'];
     }
 
     private function resolveExpiresAt(?string $ttl)

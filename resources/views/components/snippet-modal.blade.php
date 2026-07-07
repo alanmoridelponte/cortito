@@ -329,7 +329,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
         form: {
             alias: '',
             content: '',
-            contentType: 'text',
+            contentType: 'url',
             language: '',
             title: '',
             ttl: '7d',
