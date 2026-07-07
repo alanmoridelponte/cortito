@@ -194,6 +194,12 @@ class SnippetController extends Controller
 
         $validated = $this->validateSnippet($request, $snippet->id);
 
+        if ($request->boolean('remove_password')) {
+            $validated['password'] = null;
+        } elseif (! isset($validated['password']) || $validated['password'] === '') {
+            unset($validated['password']);
+        }
+
         $validated['alias'] = $snippet->alias;
 
         if (auth()->check()) {

@@ -166,6 +166,53 @@
                     </div>
                 </template>
 
+                {{-- Password protection --}}
+                <div class="mb-4 sm:mb-6">
+                    <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">
+                        Proteccion con contrasena
+                    </label>
+
+                    <template x-if="isEditing && hasPassword">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 transition-all"
+                                 :class="removePassword
+                                     ? 'border-mint/30 bg-mint-light/40'
+                                     : 'border-amber/20 bg-amber-light/30'">
+                                <svg class="h-4 w-4 shrink-0" :class="removePassword ? 'text-mint' : 'text-amber'"
+                                     fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                                <span class="text-xs font-medium"
+                                      :class="removePassword ? 'text-mint' : 'text-amber-dark'"
+                                      x-text="removePassword ? 'Se quitara al guardar' : 'Protegido con contrasena'">
+                                </span>
+                                <button type="button"
+                                        @click="removePassword = !removePassword; if(removePassword) form.password = ''"
+                                        class="ml-auto text-xs font-medium underline underline-offset-2 transition-colors"
+                                        :class="removePassword
+                                            ? 'text-graphite hover:text-ink decoration-graphite-light/30'
+                                            : 'text-danger hover:text-danger-dark decoration-danger/30'">
+                                    <span x-text="removePassword ? 'Cancelar' : 'Quitar contrasena'"></span>
+                                </button>
+                            </div>
+                            <input type="password" x-model="form.password" :disabled="removePassword"
+                                   :placeholder="removePassword ? '' : 'Nueva contrasena (opcional)'"
+                                   minlength="4" maxlength="255"
+                                   class="w-full rounded-lg border-2 px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 disabled:cursor-not-allowed"
+                                   :class="removePassword
+                                       ? 'border-graphite-light/20 bg-cream/30 text-graphite-light/50'
+                                       : 'border-border-warm bg-warm-white text-ink placeholder-graphite-light focus:border-celeste focus:ring-celeste-ring'">
+                        </div>
+                    </template>
+
+                    <template x-if="!isEditing || !hasPassword">
+                        <input type="password" x-model="form.password"
+                               placeholder="Contrasena (opcional)" minlength="4" maxlength="255"
+                               class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
+                    </template>
+                </div>
+
                 {{-- Premium options (authenticated only) --}}
                 @auth
                     <div class="rounded-xl border border-celeste/20 bg-celeste-light/50 p-5">
@@ -181,7 +228,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
-                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div x-show="showPremium" x-collapse class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
                                 <label class="mb-1.5 block text-xs font-medium text-graphite">Expiracion</label>
                                 <select x-model="form.ttl" class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
@@ -198,19 +245,6 @@
                                     <option value="1">Publico</option>
                                     <option value="0">Privado</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label class="mb-1.5 block text-xs font-medium text-graphite" x-text="hasPassword ? 'Cambiar contrasena' : 'Contrasena'"></label>
-                                <input
-                                    type="password"
-                                    x-model="form.password"
-                                    :placeholder="hasPassword ? 'Dejalo vacio para mantener la actual' : 'Minimo 4 caracteres'"
-                                    minlength="4"
-                                    maxlength="255"
-                                    class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-3 py-2.5 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
-                                <template x-if="isEditing && hasPassword">
-                                    <p class="mt-1.5 text-xs text-celeste">Actualmente protegido. Escribi una nueva contrasena para cambiarla.</p>
-                                </template>
                             </div>
                         </div>
                     </div>
@@ -287,6 +321,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
         errors: {},
         showPremium: false,
         hasPassword: false,
+        removePassword: false,
         debounceTimer: null,
         anonymousCount: anonymousCount,
         anonymousLimit: anonymousLimit,
@@ -353,9 +388,6 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                     if (data.ttl) this.form.ttl = data.ttl;
                     if (data.is_public !== undefined) this.form.isPublic = data.is_public ? '1' : '0';
                     this.hasPassword = data.has_password || false;
-                    if (this.hasPassword) {
-                        this.showPremium = true;
-                    }
                 }
             } catch {
                 this.serverError = 'No se pudo cargar el cortito.';
@@ -371,6 +403,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
             this.errors = {};
             this.showPremium = false;
             this.hasPassword = false;
+            this.removePassword = false;
         },
 
         close() {
@@ -456,12 +489,16 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit) {
                 title: this.form.title || null,
             };
 
+            if (this.form.password && !this.removePassword) {
+                body.password = this.form.password;
+            }
+            if (this.isEditing && this.removePassword) {
+                body.remove_password = true;
+            }
+
             @auth
                 body.ttl = this.form.ttl;
                 body.is_public = this.form.isPublic === '1';
-                if (this.form.password) {
-                    body.password = this.form.password;
-                }
             @endauth
 
             const url = this.isEditing
