@@ -149,43 +149,6 @@
                     </div>
                 </template>
 
-                {{-- URL input (url type only) --}}
-                <template x-if="form.contentType === 'url'">
-                    <div class="mb-4 sm:mb-6">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
-                        <input
-                            type="url"
-                            x-model="form.content"
-                            placeholder="https://ejemplo.com/pagina"
-                            required
-                            class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
-                        <p class="mt-2 text-xs text-graphite-light">Si el visitante llega con datos en el enlace, se mantienen al redirigir.</p>
-                        <template x-if="errors.content">
-                            <p class="mt-1.5 text-xs text-danger" x-text="errors.content[0]"></p>
-                        </template>
-                    </div>
-                </template>
-
-                {{-- Text content (text type only) --}}
-                <template x-if="form.contentType === 'text'">
-                    <div class="mb-4 sm:mb-6">
-                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
-                        <textarea
-                            x-model="form.content"
-                            placeholder="Escribi o pega tu nota aca..."
-                            required
-                            rows="14"
-                            class="w-full resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring focus:bg-warm-white"
-                        ></textarea>
-                        <div class="mt-2 flex items-center justify-between">
-                            <template x-if="errors.content">
-                                <p class="text-xs text-danger" x-text="errors.content[0]"></p>
-                            </template>
-                            <p class="ml-auto font-mono text-xs text-graphite-light" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
-                        </div>
-                    </div>
-                </template>
-
                 {{-- Password protection --}}
                 <div class="mb-4 sm:mb-6">
                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">
@@ -232,6 +195,43 @@
                                class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                     </template>
                 </div>
+
+                {{-- URL input (url type only) --}}
+                <template x-if="form.contentType === 'url'">
+                    <div class="mb-4 sm:mb-6">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">URL destino</label>
+                        <input
+                            type="url"
+                            x-model="form.content"
+                            placeholder="https://ejemplo.com/pagina"
+                            required
+                            class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
+                        <p class="mt-2 text-xs text-graphite-light">Si el visitante llega con datos en el enlace, se mantienen al redirigir.</p>
+                        <template x-if="errors.content">
+                            <p class="mt-1.5 text-xs text-danger" x-text="errors.content[0]"></p>
+                        </template>
+                    </div>
+                </template>
+
+                {{-- Text content (text type only) --}}
+                <template x-if="form.contentType === 'text'">
+                    <div class="mb-4 sm:mb-6">
+                        <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">Contenido</label>
+                        <textarea
+                            x-model="form.content"
+                            placeholder="Escribi o pega tu nota aca..."
+                            required
+                            rows="14"
+                            class="w-full resize-none rounded-lg border-2 border-border-warm bg-cream/50 px-4 py-3 font-mono text-sm text-ink placeholder-graphite-light leading-relaxed transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring focus:bg-warm-white"
+                        ></textarea>
+                        <div class="mt-2 flex items-center justify-between">
+                            <template x-if="errors.content">
+                                <p class="text-xs text-danger" x-text="errors.content[0]"></p>
+                            </template>
+                            <p class="ml-auto font-mono text-xs text-graphite-light" x-text="form.content.length.toLocaleString('es-AR') + ' / ' + maxChars.toLocaleString('es-AR') + ' caracteres'"></p>
+                        </div>
+                    </div>
+                </template>
 
                 {{-- Premium options (authenticated only) --}}
                 @auth
