@@ -169,7 +169,7 @@
                 {{-- Password protection --}}
                 <div class="mb-4 sm:mb-6">
                     <label class="mb-2 block text-xs font-semibold uppercase tracking-wider text-graphite-light">
-                        Proteccion con contrasena
+                        Proteccion con contraseña
                     </label>
 
                     <template x-if="isEditing && hasPassword">
@@ -185,7 +185,7 @@
                                 </svg>
                                 <span class="text-xs font-medium"
                                       :class="removePassword ? 'text-mint' : 'text-amber-dark'"
-                                      x-text="removePassword ? 'Se quitara al guardar' : 'Protegido con contrasena'">
+                                      x-text="removePassword ? 'Se quitara al guardar' : 'Protegido con contraseña'">
                                 </span>
                                 <button type="button"
                                         @click="removePassword = !removePassword; if(removePassword) form.password = ''"
@@ -193,11 +193,11 @@
                                         :class="removePassword
                                             ? 'text-graphite hover:text-ink decoration-graphite-light/30'
                                             : 'text-danger hover:text-danger-dark decoration-danger/30'">
-                                    <span x-text="removePassword ? 'Cancelar' : 'Quitar contrasena'"></span>
+                                    <span x-text="removePassword ? 'Cancelar' : 'Quitar contraseña'"></span>
                                 </button>
                             </div>
                             <input type="password" x-model="form.password" :disabled="removePassword"
-                                   :placeholder="removePassword ? '' : 'Nueva contrasena (opcional)'"
+                                   :placeholder="removePassword ? '' : 'Nueva contraseña (opcional)'"
                                    minlength="4" maxlength="255"
                                    class="w-full rounded-lg border-2 px-4 py-3 text-sm transition-all focus:outline-none focus:ring-2 disabled:cursor-not-allowed"
                                    :class="removePassword
@@ -208,7 +208,7 @@
 
                     <template x-if="!isEditing || !hasPassword">
                         <input type="password" x-model="form.password"
-                               placeholder="Contrasena (opcional)" minlength="4" maxlength="255"
+                               placeholder="Contraseña (opcional)" minlength="4" maxlength="255"
                                class="w-full rounded-lg border-2 border-border-warm bg-warm-white px-4 py-3 text-sm text-ink placeholder-graphite-light transition-all focus:border-celeste focus:outline-none focus:ring-2 focus:ring-celeste-ring">
                     </template>
                 </div>
