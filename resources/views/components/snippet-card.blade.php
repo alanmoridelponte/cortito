@@ -43,7 +43,7 @@
     }
 @endphp
 
-<div class="group relative flex flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
+<div class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm transition-all duration-200 hover:border-graphite-light/30 hover:shadow-md {{ $config['accent'] }}"
      x-data="{ showDeleteConfirm: false, copied: false }">
 
     {{-- Click area --}}
