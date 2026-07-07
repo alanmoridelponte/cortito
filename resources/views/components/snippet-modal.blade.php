@@ -419,7 +419,7 @@ function snippetModal(contentTypes, maxChars, anonymousCount, anonymousLimit, is
         },
 
         resetForm() {
-            this.form = { alias: '', content: '', contentType: 'text', title: '', ttl: '7d', isPublic: '1', password: '' };
+            this.form = { alias: '', content: '', contentType: 'url', title: '', ttl: '7d', isPublic: '1', password: '' };
             this.aliasChecking = false;
             this.aliasAvailable = null;
             this.submitting = false;
