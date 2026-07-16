@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Cortito - Cortitos')</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <meta name="description" content="Acortá links y compartí notas que se borran solas. 24 horas y chau: sin cuenta, sin rastro y gratis. Cortito, hecho en Argentina.">
+    <link rel="canonical" href="{{ url()->current() }}">
+    <meta name="theme-color" content="#75AADB">
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Cortito">
+    <meta property="og:title" content="Cortito — Links y notas que duran lo justo">
+    <meta property="og:description" content="Acortá links y compartí notas que se borran solas. 24 horas y chau: sin cuenta, sin rastro y gratis.">
+    <meta property="og:image" content="{{ asset('web-app-manifest-512x512.png') }}">
+    <meta property="og:url" content="{{ url()->current() }}">
+
+    {{-- Twitter --}}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Cortito — Links y notas que duran lo justo">
+    <meta name="twitter:description" content="Acortá links y compartí notas que se borran solas. Sin cuenta, sin rastro y gratis.">
+    <meta name="twitter:image" content="{{ asset('web-app-manifest-512x512.png') }}">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Cortito" />
+    <link rel="manifest" href="/site.webmanifest" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>[x-cloak] { display: none !important; }</style>
 </head>
