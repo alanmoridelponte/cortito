@@ -47,8 +47,8 @@
 
     <footer class="border-t border-border-warm py-8 text-center">
         <x-sol-de-mayo class="mx-auto mb-2 h-5 w-5 text-sol/60" />
-        <p class="font-display text-xs font-medium tracking-wide text-graphite-light uppercase">cortito.ar</p>
-        <p class="mt-1 text-[11px] font-medium tracking-wide text-border-warm">Cortito y al pie &mdash; hecho en Argentina 🇦🇷</p>
+        <p class="font-display text-xs font-semibold tracking-wide text-graphite uppercase">cortito.ar</p>
+        <p class="mt-1 text-xs font-medium text-graphite">Cortito y al pie &mdash; hecho en Argentina 🇦🇷</p>
     </footer>
 
     <x-cookie-consent />
