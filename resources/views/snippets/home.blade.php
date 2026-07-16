@@ -40,12 +40,12 @@
                     $totalViews = collect($allSnippets)->sum('views_count');
                 @endphp
                 <div class="flex items-center gap-3 text-sm">
-                    <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
-                        <span class="font-display font-bold text-ink">{{ $activeCount }}</span>
+                    <div class="flex items-center gap-2 rounded-lg border border-celeste/20 bg-celeste-light/50 px-3.5 py-2">
+                        <span class="font-display font-bold text-celeste-text">{{ $activeCount }}</span>
                         <span class="text-graphite">Activos</span>
                     </div>
-                    <div class="flex items-center gap-2 rounded-lg border border-border-warm bg-warm-white px-3.5 py-2">
-                        <svg class="h-3.5 w-3.5 text-graphite-light" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <div class="flex items-center gap-2 rounded-lg border border-sol/25 bg-sol-light/60 px-3.5 py-2">
+                        <svg class="h-3.5 w-3.5 text-sol-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
@@ -81,7 +81,7 @@
                         @click="activeFilter = filter.value; applyFilters()"
                         class="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150"
                         :class="activeFilter === filter.value
-                            ? 'bg-ink text-warm-white shadow-sm'
+                            ? 'bg-celeste text-white shadow-sm shadow-celeste/25'
                             : 'bg-warm-white text-graphite hover:bg-cream-dark border border-border-warm'">
                         <span x-text="filter.label"></span>
                         <template x-if="filter.count > 0">
@@ -128,7 +128,7 @@
         </div>
     @else
         {{-- Snippet grid --}}
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             @foreach($snippets as $snippet)
                 <div data-type="{{ $snippet->content_type }}"
                      data-title="{{ strtolower($snippet->title ?? '') }}"

@@ -172,3 +172,32 @@
 .btn-press:active {
     transform: scale(0.97);
 }
+
+/* Decorative motion — Sol de Mayo spin, floating blobs, preview fade.
+   Gated behind reduced-motion so it never plays for users who opt out. */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes spin-slow {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 70s linear infinite;
+    }
+
+    @keyframes float-slow {
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    .animate-float-slow {
+        animation: float-slow 8s ease-in-out infinite;
+    }
+    .animate-float-slower {
+        animation: float-slow 11s ease-in-out infinite;
+    }
+}
