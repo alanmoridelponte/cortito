@@ -11,8 +11,8 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
                 </svg>
             </div>
-            <h2 class="font-display text-xl font-bold text-ink">Anotador protegido</h2>
-            <p class="mt-2 text-sm text-graphite">Ingresa la contraseña para ver el contenido.</p>
+            <h2 class="font-display text-xl font-bold text-ink">Cortito protegido</h2>
+            <p class="mt-2 text-sm text-graphite">Ingresá la contraseña para ver el contenido.</p>
 
             <form method="POST" action="{{ route('snippets.show.password', $snippet->alias) }}" class="mt-6 space-y-3">
                 @csrf
@@ -54,8 +54,8 @@
                     {{-- Type badge --}}
                     @php
                         $typeConfig = [
-                            'text' => ['bg' => 'bg-mint-light', 'text' => 'text-mint', 'label' => 'Texto'],
-                            'url' => ['bg' => 'bg-coral-light', 'text' => 'text-coral', 'label' => 'Acortador'],
+                            'text' => ['bg' => 'bg-celeste-light', 'text' => 'text-celeste-text', 'label' => 'Texto'],
+                            'url' => ['bg' => 'bg-celeste-light', 'text' => 'text-celeste-text', 'label' => 'Enlace'],
                         ];
                         $cfg = $typeConfig[$snippet->content_type] ?? ['bg' => 'bg-cream-dark', 'text' => 'text-graphite', 'label' => ucfirst($snippet->content_type)];
                     @endphp
@@ -100,7 +100,7 @@
                                 url: '{{ route('snippets.show', $snippet->alias) }}'
                             }).catch(() => {});
                         "
-                        class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-graphite transition-colors hover:text-mint hover:bg-mint-light cursor-pointer">
+                        class="inline-flex items-center gap-1 rounded-md px-2 py-1 text-graphite transition-colors hover:text-celeste hover:bg-celeste-light cursor-pointer">
                         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
                         </svg>
@@ -126,7 +126,7 @@
                             }
                         "
                         class="inline-flex items-center gap-1 rounded-md px-2 py-1 transition-colors cursor-pointer"
-                        :class="copied ? 'text-mint bg-mint-light' : 'text-graphite hover:text-celeste hover:bg-celeste-light'">
+                        :class="copied ? 'text-celeste-text bg-celeste-light' : 'text-graphite hover:text-celeste hover:bg-celeste-light'">
                         <svg x-show="!copied" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/>
                         </svg>
@@ -165,9 +165,23 @@
         {{-- Content --}}
         <div class="overflow-hidden rounded-xl border border-border-warm bg-warm-white shadow-sm">
             @if($snippet->content_type === 'url')
-                <div class="p-6 text-center">
-                    <p class="mb-2 text-sm text-graphite">Redirigiendo a:</p>
-                    <a href="{{ $snippet->content }}" class="font-mono text-sm font-medium text-celeste break-all transition-colors hover:text-celeste-hover">{{ $snippet->content }}</a>
+                <div class="p-6 sm:p-8">
+                    <div class="mb-3 flex items-center gap-2">
+                        <span class="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-celeste-light text-celeste-text">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+                            </svg>
+                        </span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-graphite-light">Enlace de destino</span>
+                    </div>
+                    <a href="{{ $snippet->content }}" target="_blank" rel="noopener" class="block font-mono text-sm font-medium text-celeste-text break-all transition-colors hover:text-celeste-hover">{{ $snippet->content }}</a>
+                    <a href="{{ $snippet->content }}" target="_blank" rel="noopener"
+                       class="btn-press mt-5 inline-flex items-center gap-2 rounded-lg bg-sol px-5 py-2.5 text-sm font-bold text-ink shadow-sm shadow-sol/20 transition-all duration-150 hover:bg-sol-hover hover:shadow-md hover:shadow-sol/25">
+                        Ir al destino
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                        </svg>
+                    </a>
                 </div>
             @else
                 <div class="border-b border-border-light bg-cream/30 px-6 py-2">
@@ -196,7 +210,7 @@
                     </svg>
                 </div>
                 <h3 class="mb-1 mt-3 font-display text-lg font-bold text-ink">Eliminar cortito</h3>
-                <p class="mb-5 text-sm text-graphite">Se eliminará permanentemente <strong class="font-mono font-semibold text-ink">{{ $snippet->alias }}</strong>. Esta accion no se puede deshacer.</p>
+                <p class="mb-5 text-sm text-graphite">Se eliminará permanentemente <strong class="font-mono font-semibold text-ink">{{ $snippet->alias }}</strong>. Esta acción no se puede deshacer.</p>
                 <div class="flex justify-end gap-2">
                     <button type="button" @click="showDeleteConfirm = false"
                             class="rounded-lg border border-border-warm bg-warm-white px-4 py-2 text-sm font-medium text-graphite transition-colors hover:bg-cream-dark cursor-pointer">

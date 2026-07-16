@@ -14,7 +14,7 @@
         <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-6">
             <a href="{{ route('home') }}" class="flex items-baseline gap-0.5 group">
                 <span class="font-display text-xl font-bold tracking-tight text-ink transition-colors group-hover:text-celeste">cortito</span>
-                <span class="font-display text-xl font-medium text-celeste">.ar</span>
+                <span class="font-display text-xl font-medium text-celeste-text">.ar</span>
             </a>
             <div class="flex items-center gap-3">
                 @yield('header-actions')
@@ -30,7 +30,8 @@
     </main>
 
     <footer class="border-t border-border-warm py-8 text-center">
-        <p class="font-display text-xs font-medium tracking-wide text-graphite-light uppercase">cortito.ar &mdash; cortitos efímeros</p>
+        <p class="font-display text-xs font-medium tracking-wide text-graphite-light uppercase">cortito.ar</p>
+        <p class="mt-1 text-[11px] font-medium tracking-wide text-border-warm">Cortito y al pie &mdash; hecho en Argentina 🇦🇷</p>
     </footer>
 
     <x-cookie-consent />

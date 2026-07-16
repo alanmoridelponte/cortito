@@ -17,10 +17,11 @@
     --color-border-warm: #E8E4DF;
     --color-border-light: #F0EDE8;
 
-    --color-celeste: #4A90D9;
-    --color-celeste-hover: #3A7BC8;
+    --color-celeste: #75AADB;
+    --color-celeste-hover: #5A97D0;
     --color-celeste-light: #EBF3FC;
-    --color-celeste-ring: #4A90D933;
+    --color-celeste-ring: #75AADB33;
+    --color-celeste-text: #2C6BAE;
 
     --color-sol: #E8B100;
     --color-sol-hover: #CC9D00;
@@ -121,12 +122,12 @@
     transition: height 0.2s ease-out;
 }
 
-/* Card type accent — left border stripe */
+/* Card type accent — left border stripe (monochrome celeste) */
 .card-accent-text {
-    border-left: 3px solid var(--color-mint);
+    border-left: 3px solid var(--color-celeste);
 }
 .card-accent-url {
-    border-left: 3px solid var(--color-coral);
+    border-left: 3px solid var(--color-celeste);
 }
 
 /* Focus ring celeste */

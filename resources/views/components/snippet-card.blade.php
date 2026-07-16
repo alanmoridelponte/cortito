@@ -4,16 +4,16 @@
     $typeConfig = [
         'text' => [
             'accent' => 'card-accent-text',
-            'bg' => 'bg-mint-light',
-            'text' => 'text-mint',
+            'bg' => 'bg-celeste-light',
+            'text' => 'text-celeste-text',
             'label' => 'Texto',
             'icon' => 'note',
         ],
         'url' => [
             'accent' => 'card-accent-url',
-            'bg' => 'bg-coral-light',
-            'text' => 'text-coral',
-            'label' => 'Enlace acortado',
+            'bg' => 'bg-celeste-light',
+            'text' => 'text-celeste-text',
+            'label' => 'Enlace',
             'icon' => 'link',
         ],
     ];
@@ -36,7 +36,7 @@
             $expiryLabel = 'Vence en ' . $hoursRemaining . 'h';
         } elseif ($minutesLeft < 2880) {
             $expiryClass = 'expiry-soon';
-            $expiryLabel = 'Vence manana';
+            $expiryLabel = 'Vence mañana';
         } else {
             $expiryLabel = 'Expira ' . $snippet->expires_at->diffForHumans();
         }
@@ -130,7 +130,7 @@
             @endif
             <button type="button"
                     class="inline-flex w-full sm:w-auto sm:shrink-0 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-border-warm bg-cream-dark/70 px-3 py-1.5 font-medium transition-all text-xs duration-150 btn-press h-8 cursor-pointer"
-                    :class="copied ? 'bg-mint-light text-mint border-mint/40' : 'text-graphite-light hover:text-celeste hover:bg-celeste-light/50 hover:border-celeste/30'"
+                    :class="copied ? 'bg-celeste-light text-celeste-text border-celeste/40' : 'text-graphite-light hover:text-celeste hover:bg-celeste-light/50 hover:border-celeste/30'"
                     @click="
                         const text = '{{ route('snippets.show', $snippet->alias) }}';
                         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -154,7 +154,7 @@
                 <svg x-show="copied" x-cloak class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                 </svg>
-                <span x-text="copied ? 'Copiado!' : 'Copiar Enlace'"></span>
+                <span x-text="copied ? 'Copiado!' : 'Copiar enlace'"></span>
             </button>
         </div>
     </div>
@@ -186,7 +186,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
             </div>
-            <h3 class="mb-1 mt-3 font-display text-lg font-bold text-ink">Eliminar anotador</h3>
+            <h3 class="mb-1 mt-3 font-display text-lg font-bold text-ink">Eliminar cortito</h3>
             <p class="mb-5 text-sm text-graphite">Se eliminará permanentemente <strong class="font-mono font-semibold text-ink">{{ $snippet->alias }}</strong>. Esta acción no se puede deshacer.</p>
             <div class="flex justify-end gap-2">
                 <button type="button" @click="showDeleteConfirm = false"

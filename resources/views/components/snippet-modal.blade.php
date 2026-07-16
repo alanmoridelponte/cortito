@@ -79,9 +79,9 @@
                             <label class="flex-1 cursor-pointer whitespace-nowrap rounded-lg border-2 px-1.5 py-2 text-center transition-all duration-150 sm:px-2 sm:py-2.5 md:px-4 md:py-3"
                                 :class="form.contentType === '{{ $value }}'
                                     ? @js(match($value) {
-                                        'text' => 'border-mint bg-mint-light text-mint',
-                                        'url' => 'border-coral bg-coral-light text-coral',
-                                        default => 'border-celeste bg-celeste-light text-celeste',
+                                        'text' => 'border-celeste bg-celeste-light text-celeste-text',
+                                        'url' => 'border-celeste bg-celeste-light text-celeste-text',
+                                        default => 'border-celeste bg-celeste-light text-celeste-text',
                                     })
                                     : 'border-border-warm text-graphite hover:border-graphite-light hover:bg-cream'"
                             >
@@ -236,7 +236,7 @@
                 @auth
                     <div class="rounded-xl border border-celeste/20 bg-celeste-light/50 p-5">
                         <button type="button" @click="showPremium = !showPremium"
-                                class="flex w-full items-center justify-between text-sm font-semibold text-celeste">
+                                class="flex w-full items-center justify-between text-sm font-semibold text-celeste-text">
                             <span class="flex items-center gap-2">
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/>
